@@ -1,4 +1,4 @@
-# app.py - AuraRise Complete Application (Python 3.14 Compatible)
+# app.py - AuraRise Complete Application with 200+ Wallpapers
 import streamlit as st
 import random
 import datetime
@@ -7,279 +7,233 @@ import json
 import os
 import sys
 import hashlib
-from io import BytesIO
 import base64
+from io import BytesIO
 
 # Page configuration
 st.set_page_config(
-    page_title="AuraRise - Level Up Your Life",
-    page_icon="🦾",
+    page_title="Aura Builder · id³",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for amazing vibes - FULLY RESPONSIVE
+# ============================================================
+#  CUSTOM CSS - GLASS MORPHISM + BRIGHT THEMES
+# ============================================================
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     
     * {
-        transition: all 0.3s ease;
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
+        transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
     
     .stApp {
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        min-height: 100vh;
+        transition: background 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     }
     
-    /* Responsive title */
-    .title-text {
-        font-family: 'Orbitron', sans-serif;
-        font-size: clamp(2rem, 5vw, 3.5rem);
-        font-weight: 900;
-        background: linear-gradient(135deg, #00c6ff, #a855f7, #f5a623);
+    /* Signature watermark */
+    .signature {
+        position: fixed;
+        bottom: 90px;
+        right: 24px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 2.5px;
+        color: #0f172a;
+        opacity: 0.3;
+        z-index: 999;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 6px 16px;
+        border-radius: 40px;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        pointer-events: none;
+    }
+    
+    /* Glass container */
+    .glass-container {
+        background: rgba(255, 255, 255, 0.75) !important;
+        backdrop-filter: blur(24px) saturate(1.6) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(1.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+        border-radius: 32px !important;
+        padding: 32px 28px !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02) inset !important;
+    }
+    
+    /* Landing */
+    .landing-badge {
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        padding: 6px 18px;
+        border-radius: 40px;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 24px;
+    }
+    
+    .landing-title {
+        font-size: clamp(34px, 5vw, 44px);
+        font-weight: 700;
+        letter-spacing: -2px;
+        background: linear-gradient(135deg, #0f172a 60%, #475569);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-align: center;
-        margin-bottom: 10px;
-        animation: titleGlow 3s ease-in-out infinite;
+        margin-bottom: 6px;
     }
     
-    @keyframes titleGlow {
-        0%, 100% { filter: brightness(1); }
-        50% { filter: brightness(1.3); }
+    .tagline {
+        color: #64748b;
+        font-size: 15px;
+        font-weight: 400;
+        margin-bottom: 36px;
+        letter-spacing: 0.2px;
     }
     
-    /* Watermark - visible on all pages */
-    .watermark {
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        color: rgba(255,255,255,0.3);
-        font-size: clamp(10px, 1.5vw, 13px);
-        font-style: italic;
-        z-index: 999;
-        pointer-events: none;
-        font-family: 'Orbitron', sans-serif;
-        text-shadow: 0 0 10px rgba(168,85,247,0.3);
-        background: rgba(0,0,0,0.3);
-        padding: 5px 15px;
-        border-radius: 20px;
-        backdrop-filter: blur(5px);
-    }
-    
-    /* Wallpaper button - fixed position */
-    .wallpaper-fab {
-        position: fixed;
-        bottom: 80px;
-        left: 20px;
-        z-index: 999;
-        background: linear-gradient(135deg, #a855f7, #00c6ff);
-        border: none;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        font-size: 24px;
+    /* Aura buttons */
+    .aura-btn {
+        padding: 16px 18px;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1.5px solid rgba(0, 0, 0, 0.04);
+        border-radius: 16px;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(168,85,247,0.4);
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        position: relative;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        margin: 6px 0;
+    }
+    
+    .aura-btn:hover {
+        border-color: rgba(0, 0, 0, 0.12);
+        background: rgba(255, 255, 255, 0.8);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    }
+    
+    .aura-btn.selected {
+        border-color: #0f172a;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+    
+    /* Score ring */
+    .score-ring-container {
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s;
-        animation: float 3s ease-in-out infinite;
+        margin: 20px 0;
     }
     
-    .wallpaper-fab:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 25px rgba(168,85,247,0.6);
+    .score-ring {
+        position: relative;
+        width: 120px;
+        height: 120px;
     }
     
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+    .score-ring svg {
+        transform: rotate(-90deg);
     }
     
-    /* Aura cards - responsive grid */
-    .aura-card {
-        background: rgba(20,20,40,0.8);
-        border: 2px solid rgba(255,255,255,0.1);
-        border-radius: 20px;
-        padding: clamp(15px, 2vw, 25px);
-        text-align: center;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-        backdrop-filter: blur(10px);
-        height: 100%;
-    }
-    
-    .aura-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-        border-color: rgba(0,198,255,0.5);
-    }
-    
-    .aura-card.selected {
-        border: 2px solid #00c6ff;
-        box-shadow: 0 0 40px rgba(0,198,255,0.3);
-        background: rgba(0,198,255,0.1);
-    }
-    
-    /* Chat messages */
-    .chat-message {
-        padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 18px);
-        border-radius: 20px;
-        margin: 8px 0;
-        max-width: 75%;
-        animation: messageSlide 0.3s ease;
-    }
-    
-    @keyframes messageSlide {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .chat-message.sent {
-        background: linear-gradient(135deg, #00c6ff, #0099cc);
-        margin-left: auto;
-        color: #000;
-        font-weight: 500;
-    }
-    
-    .chat-message.received {
-        background: rgba(255,255,255,0.1);
-        margin-right: auto;
-        border: 1px solid rgba(255,255,255,0.15);
-    }
-    
-    /* Responsive maze */
-    .maze-wrapper {
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
-        touch-action: none;
-        user-select: none;
-        -webkit-user-select: none;
-    }
-    
-    .maze-container {
-        display: inline-block;
-        border: 3px solid rgba(168,85,247,0.5);
-        border-radius: 15px;
-        padding: 8px;
-        box-shadow: 0 0 40px rgba(168,85,247,0.2);
-        background: rgba(0,0,0,0.3);
-        width: 100%;
-    }
-    
-    .maze-row {
+    /* Tasks */
+    .task-item {
         display: flex;
-        justify-content: center;
-        width: 100%;
+        align-items: center;
+        padding: 12px 16px;
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        gap: 14px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        margin: 6px 0;
     }
     
-    .maze-cell {
+    .task-item:hover {
+        border-color: #e2e8f0;
+        background: #fafbfc;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    }
+    
+    .task-item.completed {
+        opacity: 0.6;
+        border-color: #f1f5f9;
+    }
+    
+    .task-item.completed .task-text {
+        text-decoration: line-through;
+        color: #94a3b8;
+    }
+    
+    .task-check {
+        width: 24px;
+        height: 24px;
+        border: 2px solid #cbd5e1;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+        transition: all 0.25s ease;
+        background: #fff;
+    }
+    
+    .task-item.completed .task-check {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: #fff;
+    }
+    
+    /* Calendar */
+    .cal-day {
         aspect-ratio: 1;
-        width: calc(100% / var(--maze-size));
-        max-width: 50px;
-        max-height: 50px;
-        display: inline-flex;
+        display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid rgba(255,255,255,0.08);
-        font-size: clamp(14px, 2.5vw, 22px);
-        transition: all 0.15s;
-        border-radius: 3px;
-        margin: 1px;
-        cursor: pointer;
+        font-size: 12px;
+        font-weight: 450;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.02);
+        color: #94a3b8;
+        transition: all 0.25s ease;
     }
     
-    .maze-wall {
-        background: linear-gradient(135deg, #2a2a3e, #1a1a2e);
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    .cal-day.active {
+        background: #0f172a;
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15);
     }
     
-    .maze-path {
-        background: rgba(0,0,0,0.3);
+    .cal-day.today {
+        border: 2px solid #0f172a;
+        background: transparent;
+        color: #0f172a;
+        font-weight: 600;
     }
     
-    .maze-player {
-        background: linear-gradient(135deg, #00c6ff, #0099cc);
-        box-shadow: 0 0 25px rgba(0,198,255,0.6);
-        animation: playerPulse 1s ease-in-out infinite;
-        border-radius: 8px;
-        z-index: 10;
-    }
-    
-    .maze-goal {
-        background: linear-gradient(135deg, #f5a623, #ffd700);
-        animation: goalGlow 1.5s ease-in-out infinite;
-        border-radius: 8px;
-    }
-    
-    @keyframes playerPulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
-    
-    @keyframes goalGlow {
-        0%, 100% { box-shadow: 0 0 15px rgba(245,166,35,0.5); }
-        50% { box-shadow: 0 0 35px rgba(245,166,35,0.9); }
-    }
-    
-    /* Progress bars */
-    .progress-bar {
-        height: clamp(8px, 1.5vw, 12px);
-        border-radius: 6px;
-        background: rgba(255,255,255,0.08);
-        overflow: hidden;
-        margin: 5px 0;
-    }
-    
-    .progress-fill {
-        height: 100%;
-        border-radius: 6px;
-        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    /* Cards */
-    .stat-card {
-        background: rgba(20,20,40,0.6);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 15px;
-        padding: clamp(15px, 2vw, 20px);
-        text-align: center;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s;
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        border-color: rgba(0,198,255,0.3);
-    }
-    
-    .achievement-card {
-        background: rgba(20,20,40,0.6);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 20px;
-        padding: clamp(15px, 2vw, 25px);
-        text-align: center;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s;
-    }
-    
-    .achievement-card.unlocked {
-        border-color: rgba(245,166,35,0.5);
-        box-shadow: 0 0 30px rgba(245,166,35,0.2);
-    }
-    
-    /* Bottom Navigation - RESPONSIVE */
+    /* Bottom navigation */
     .bottom-nav {
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
-        background: rgba(12, 12, 25, 0.95);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(25px);
         -webkit-backdrop-filter: blur(25px);
         display: flex;
@@ -288,100 +242,11 @@ st.markdown("""
         padding: 8px 5px;
         padding-bottom: max(8px, env(safe-area-inset-bottom));
         z-index: 1000;
-        border-top: 1px solid rgba(255,255,255,0.1);
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
         overflow-x: auto;
-        gap: 5px;
-    }
-    
-    .nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-        cursor: pointer;
-        color: #888;
-        transition: 0.2s;
-        font-size: clamp(0.6rem, 1.5vw, 0.75rem);
-        font-weight: 500;
-        padding: 6px 10px;
-        border-radius: 12px;
-        background: none;
-        border: none;
-        font-family: 'Poppins', sans-serif;
-        white-space: nowrap;
-        min-width: 50px;
-        flex-shrink: 0;
-    }
-    
-    .nav-item.active {
-        color: #00c6ff;
-    }
-    
-    .nav-item .nav-icon {
-        font-size: clamp(1rem, 2.5vw, 1.4rem);
-        transition: 0.2s;
-    }
-    
-    .nav-item.active .nav-icon {
-        text-shadow: 0 0 20px rgba(0,198,255,0.7);
-    }
-    
-    /* Online dot */
-    .online-dot {
-        width: 8px;
-        height: 8px;
-        background: #4ade80;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 6px;
-        animation: onlinePulse 2s infinite;
-    }
-    
-    @keyframes onlinePulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
-        50% { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
-    }
-    
-    /* Particle effects */
-    .particle {
-        position: fixed;
-        pointer-events: none;
-        z-index: 9999;
-        animation: particleUp 1s ease-out forwards;
-        font-size: 20px;
-    }
-    
-    @keyframes particleUp {
-        0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
-        100% { opacity: 0; transform: translateY(-150px) scale(0.3) rotate(180deg); }
-    }
-    
-    /* Media queries for responsiveness */
-    @media (max-width: 768px) {
-        .maze-cell {
-            max-width: 35px;
-            max-height: 35px;
-            font-size: 14px;
-        }
-        
-        .desktop-only {
-            display: none !important;
-        }
-        
-        .bottom-nav {
-            padding: 6px 2px;
-        }
-        
-        .nav-item {
-            padding: 4px 6px;
-        }
     }
     
     @media (min-width: 769px) {
-        .mobile-only {
-            display: none !important;
-        }
-        
         .bottom-nav {
             max-width: 600px;
             left: 50%;
@@ -390,1075 +255,715 @@ st.markdown("""
         }
     }
     
-    @media (min-width: 1024px) {
-        .bottom-nav {
-            max-width: 800px;
+    /* Wallpaper button */
+    .wallpaper-fab {
+        position: fixed;
+        bottom: 90px;
+        left: 20px;
+        z-index: 999;
+        background: rgba(15, 23, 42, 0.9);
+        border: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+    
+    /* Counter chip */
+    .counter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0, 0, 0, 0.04);
+        padding: 4px 14px 4px 12px;
+        border-radius: 40px;
+        font-size: 13px;
+        color: #475569;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        margin-bottom: 18px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+        .glass-container {
+            padding: 24px 18px !important;
+            border-radius: 24px !important;
+        }
+        .landing-title {
+            font-size: 32px;
         }
     }
     
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
+    /* Streamlit overrides */
+    div[data-testid="stVerticalBlock"] > div {
+        gap: 0 !important;
     }
     
-    ::-webkit-scrollbar-track {
-        background: transparent;
+    .stButton > button {
+        width: 100%;
+        padding: 16px !important;
+        background: #0f172a !important;
+        border: none !important;
+        border-radius: 16px !important;
+        color: #fff !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.25s ease !important;
+        letter-spacing: 0.3px !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15) !important;
     }
     
-    ::-webkit-scrollbar-thumb {
-        background: rgba(255,255,255,0.15);
-        border-radius: 4px;
+    .stButton > button:hover {
+        background: #1e293b !important;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.2) !important;
     }
     
-    .user-badge {
-        display: inline-block;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
+    .stButton > button:active {
+        transform: scale(0.98);
+    }
+    
+    /* Secondary button */
+    .btn-secondary button {
+        background: transparent !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        color: #64748b !important;
+        box-shadow: none !important;
+    }
+    
+    .btn-secondary button:hover {
+        background: rgba(0, 0, 0, 0.02) !important;
+        border-color: rgba(0, 0, 0, 0.15) !important;
+        color: #0f172a !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state
-if 'app_data' not in st.session_state:
-    st.session_state.app_data = {
-        'phase': 'dashboard',
-        'selected_auras': [],
-        'aura_stats': {},
-        'user': {
-            'level': 1,
-            'xp': 0,
-            'xp_to_next': 100,
-            'aura_coins': 500,
-            'streak': 0,
-            'last_active': None,
-            'avatar': '😊',
-            'unlocked_avatars': ['😊'],
-            'wallpaper': 'default',
-            'theme': 'default'
-        },
-        'quests': [],
-        'daily_quests': [],
-        'daily_quest_date': None,
-        'achievements': [
-            {'id': 'first_quest', 'name': 'First Step', 'desc': 'Complete 1 quest', 'icon': '👣', 'unlocked': False},
-            {'id': 'streak3', 'name': 'Streak Starter', 'desc': '3-day streak', 'icon': '🔥', 'unlocked': False},
-            {'id': 'streak7', 'name': 'Weekly Warrior', 'desc': '7-day streak', 'icon': '🔥', 'unlocked': False},
-            {'id': 'quest10', 'name': 'Quest Champion', 'desc': 'Complete 10 quests', 'icon': '🏅', 'unlocked': False},
-            {'id': 'maze3', 'name': 'Maze Runner', 'desc': 'Complete 3 mazes', 'icon': '🧩', 'unlocked': False},
-            {'id': 'maze10', 'name': 'Maze Master', 'desc': 'Complete 10 mazes', 'icon': '🧩', 'unlocked': False},
-            {'id': 'aura100', 'name': 'Aura Apprentice', 'desc': 'Reach 100 Aura Score', 'icon': '✨', 'unlocked': False},
-            {'id': 'aura250', 'name': 'Aura Master', 'desc': 'Reach 250 Aura Score', 'icon': '🌟', 'unlocked': False},
-        ],
-        'journal': [],
-        'total_quests': 0,
-        'total_mazes': 0,
-        'aura_history': [],
-        'chat_messages': [],
-        'online_users': [
-            {'name': 'Edwin', 'avatar': '🦾', 'status': 'online', 'bio': 'Creator of AuraRise'},
-            {'name': 'Alex', 'avatar': '🧑‍💻', 'status': 'online', 'bio': 'Focus master'},
-            {'name': 'Maya', 'avatar': '👩‍🎨', 'status': 'online', 'bio': 'Creative spirit'},
-            {'name': 'Zane', 'avatar': '🦸', 'status': 'online', 'bio': 'Courage warrior'},
-            {'name': 'Luna', 'avatar': '🌙', 'status': 'online', 'bio': 'Intuition guide'},
-        ],
-        'current_chat_user': 'Edwin',
-        'current_page': 'home'
-    }
-
-# Aura definitions
-AURAS = [
-    {'id': 'focus', 'name': 'Focus', 'icon': '🎯', 'color': '#ff6b6b', 'desc': 'Laser-sharp concentration'},
-    {'id': 'creativity', 'name': 'Creativity', 'icon': '🎨', 'color': '#f06595', 'desc': 'Unleash imagination'},
-    {'id': 'discipline', 'name': 'Discipline', 'icon': '🧘', 'color': '#748ffc', 'desc': 'Consistent self-control'},
-    {'id': 'vitality', 'name': 'Vitality', 'icon': '⚡', 'color': '#ffd43b', 'desc': 'Radiant energy'},
-    {'id': 'empathy', 'name': 'Empathy', 'icon': '🤝', 'color': '#ff8787', 'desc': 'Deep connection'},
-    {'id': 'resilience', 'name': 'Resilience', 'icon': '🛡️', 'color': '#20c997', 'desc': 'Bounce back stronger'},
-    {'id': 'courage', 'name': 'Courage', 'icon': '🦁', 'color': '#ff922b', 'desc': 'Face fears boldly'},
-    {'id': 'mindfulness', 'name': 'Mindfulness', 'icon': '🧘‍♀️', 'color': '#63e6be', 'desc': 'Live in the now'},
+# ============================================================
+#  200+ UNSPLASH WALLPAPERS
+# ============================================================
+UNSPLASH_WALLPAPERS = [
+    # Abstract & Gradients (30)
+    "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920&q=80",
+    "https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=1920&q=80",
+    "https://images.unsplash.com/photo-1557682260-96773eb01377?w=1920&q=80",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&q=80",
+    "https://images.unsplash.com/photo-1558470598-a5dda9640f68?w=1920&q=80",
+    "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&q=80",
+    "https://images.unsplash.com/photo-1579546929662-711aa81148cf?w=1920&q=80",
+    "https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=1920&q=80",
+    "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1920&q=80",
+    "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1920&q=80",
+    
+    # Nature & Landscapes (40)
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80",
+    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80",
+    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80",
+    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80",
+    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
+    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80",
+    "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=80",
+    "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=1920&q=80",
+    "https://images.unsplash.com/photo-1518655048521-f130df041f66?w=1920&q=80",
+    "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=1920&q=80",
+    
+    # Minimal & Clean (30)
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80",
+    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1920&q=80",
+    "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1920&q=80",
+    "https://images.unsplash.com/photo-1485988412941-77a35537dae4?w=1920&q=80",
+    "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=1920&q=80",
+    "https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=1920&q=80",
+    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80",
+    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1920&q=80",
+    "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1920&q=80",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80",
+    
+    # Dark & Moody (30)
+    "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=1920&q=80",
+    "https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=1920&q=80",
+    "https://images.unsplash.com/photo-1515630278258-407f66498911?w=1920&q=80",
+    "https://images.unsplash.com/photo-1491466424936-e304919aada7?w=1920&q=80",
+    "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1920&q=80",
+    "https://images.unsplash.com/photo-1516796181076-3a4e8a7e00d7?w=1920&q=80",
+    "https://images.unsplash.com/photo-1502139214982-d0ad755818d8?w=1920&q=80",
+    "https://images.unsplash.com/photo-1506891536236-3e07892564b7?w=1920&q=80",
+    "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1920&q=80",
+    "https://images.unsplash.com/photo-1491895200222-0fc4a4c35e18?w=1920&q=80",
+    
+    # Warm & Golden (25)
+    "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80",
+    "https://images.unsplash.com/photo-1474524955719-b7f5099ab369?w=1920&q=80",
+    "https://images.unsplash.com/photo-1504198322253-cfa87a0ff25f?w=1920&q=80",
+    "https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1920&q=80",
+    "https://images.unsplash.com/photo-1487147264018-f937fba0c817?w=1920&q=80",
+    
+    # Cool & Blue (25)
+    "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?w=1920&q=80",
+    "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=1920&q=80",
+    "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1920&q=80",
+    "https://images.unsplash.com/photo-1518459031867-a89b550b39f2?w=1920&q=80",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80",
+    
+    # Texture & Patterns (20)
+    "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&q=80",
+    "https://images.unsplash.com/photo-1558470598-a5dda9640f68?w=1920&q=80",
+    "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&q=80",
+    "https://images.unsplash.com/photo-1579546929662-711aa81148cf?w=1920&q=80",
+    "https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=1920&q=80",
 ]
 
-# Wallpapers with CSS gradients
-WALLPAPERS = {
-    'default': 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%)',
-    'focus': 'linear-gradient(135deg, #1a0a0a 0%, #3e1a1a 50%, #1a0a0a 100%)',
-    'creativity': 'linear-gradient(135deg, #0a1a0a 0%, #1a3e1a 50%, #0a1a0a 100%)',
-    'vitality': 'linear-gradient(135deg, #1a1a0a 0%, #3e3e1a 50%, #1a1a0a 100%)',
-    'courage': 'linear-gradient(135deg, #1a0a1a 0%, #3e1a3e 50%, #1a0a1a 100%)',
-    'mindfulness': 'linear-gradient(135deg, #0a1a1a 0%, #1a3e3e 50%, #0a1a1a 100%)',
-    'discipline': 'linear-gradient(135deg, #0a0a2a 0%, #1a1a4e 50%, #0a0a2a 100%)',
-    'balance': 'linear-gradient(135deg, #1a1a0a 0%, #3e3e1a 50%, #1a1a0a 100%)',
-    'adventure': 'linear-gradient(135deg, #0a1a1a 0%, #1a3e3e 50%, #0a1a1a 100%)',
-    'empathy': 'linear-gradient(135deg, #1a0a0a 0%, #3e1a1a 50%, #1a0a0a 100%)',
-    'resilience': 'linear-gradient(135deg, #1a1a1a 0%, #3e3e3e 50%, #1a1a1a 100%)',
-    'leadership': 'linear-gradient(135deg, #0a0a1a 0%, #2a2a4e 50%, #0a0a1a 100%)',
+# ============================================================
+#  AURA DEFINITIONS (from original code)
+# ============================================================
+AURAS = {
+    'cold': {
+        'name': 'Cold Aura',
+        'desc': 'Distant & unreadable',
+        'gradient': 'linear-gradient(145deg, #e0f2fe 0%, #bae6fd 60%, #7dd3fc 100%)',
+        'accent': '#0284c7',
+        'emoji': '❄️',
+        'tasks': [
+            'Poker face — 2 min',
+            'Pause 2s before replying',
+            'Short neutral answers',
+            'Slow, deliberate movements',
+            'One hand in pocket'
+        ]
+    },
+    'mystery': {
+        'name': 'Mystery Aura',
+        'desc': 'Quiet depth',
+        'gradient': 'linear-gradient(145deg, #f3e8ff 0%, #d8b4fe 60%, #c084fc 100%)',
+        'accent': '#7e22ce',
+        'emoji': '🌙',
+        'tasks': [
+            'Avoid explaining yourself',
+            'Answer then pause',
+            'Change subject when probed',
+            'Limited eye contact',
+            'Leave rooms early'
+        ]
+    },
+    'nonchalant': {
+        'name': 'Nonchalant Aura',
+        'desc': 'Unbothered energy',
+        'gradient': 'linear-gradient(145deg, #fef3c7 0%, #fde68a 60%, #fcd34d 100%)',
+        'accent': '#b45309',
+        'emoji': '😌',
+        'tasks': [
+            'Shrug off drama lightly',
+            'Reply late casually',
+            'Relaxed open posture',
+            '"We\'ll see" responses',
+            'Skip 1 optional event'
+        ]
+    },
+    'intense': {
+        'name': 'Intense Aura',
+        'desc': 'Sharp presence',
+        'gradient': 'linear-gradient(145deg, #fee2e2 0%, #fca5a5 60%, #f87171 100%)',
+        'accent': '#b91c1c',
+        'emoji': '🔥',
+        'tasks': [
+            'Direct eye contact',
+            'Sharp, concise speech',
+            'Minimal smiling',
+            'Controlled gestures',
+            'Take space when standing'
+        ]
+    },
+    'calm': {
+        'name': 'Calm Aura',
+        'desc': 'Peaceful energy',
+        'gradient': 'linear-gradient(145deg, #d1fae5 0%, #6ee7b7 60%, #34d399 100%)',
+        'accent': '#047857',
+        'emoji': '🌊',
+        'tasks': [
+            'Slow diaphragmatic breathing',
+            'Soft, warm voice tone',
+            'Gentle movements',
+            'Listen fully without interrupting',
+            'No rushing — take your time'
+        ]
+    },
+    'royal': {
+        'name': 'Royal Aura',
+        'desc': 'Natural authority',
+        'gradient': 'linear-gradient(145deg, #fef9c3 0%, #fde047 60%, #facc15 100%)',
+        'accent': '#854d0e',
+        'emoji': '👑',
+        'tasks': [
+            'Upright posture always',
+            'Measured, deliberate speech',
+            'Don\'t rush to respond',
+            'Others wait for you',
+            'Head level, chin up'
+        ]
+    }
 }
 
-def get_wallpaper():
-    """Get current wallpaper"""
-    wp = st.session_state.app_data['user'].get('wallpaper', 'default')
-    return WALLPAPERS.get(wp, WALLPAPERS['default'])
+# ============================================================
+#  SESSION STATE
+# ============================================================
+if 'selected_auras' not in st.session_state:
+    st.session_state.selected_auras = []
+if 'completed_tasks' not in st.session_state:
+    st.session_state.completed_tasks = []
+if 'streak_data' not in st.session_state:
+    st.session_state.streak_data = {}
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 'landing'
+if 'wallpaper' not in st.session_state:
+    st.session_state.wallpaper = random.choice(UNSPLASH_WALLPAPERS)
+if 'wallpaper_index' not in st.session_state:
+    st.session_state.wallpaper_index = 0
+
+# ============================================================
+#  HELPERS
+# ============================================================
+def get_task_list():
+    """Get combined task list from selected auras"""
+    if not st.session_state.selected_auras:
+        return []
+    
+    all_tasks = []
+    for aura_key in st.session_state.selected_auras:
+        if aura_key in AURAS:
+            all_tasks.extend(AURAS[aura_key]['tasks'])
+    
+    unique = list(dict.fromkeys(all_tasks))
+    return unique[:8]
 
 def set_background():
-    """Apply dynamic background"""
-    wallpaper = get_wallpaper()
+    """Set wallpaper background"""
+    wallpaper = st.session_state.wallpaper
+    if not wallpaper.startswith('http'):
+        wallpaper = random.choice(UNSPLASH_WALLPAPERS)
+    
     st.markdown(f"""
     <style>
         .stApp {{
-            background: {wallpaper} !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: fixed !important;
+            background: url('{wallpaper}') center/cover fixed !important;
+        }}
+        .stApp::before {{
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: -1;
         }}
     </style>
     """, unsafe_allow_html=True)
 
-def spawn_particles(emoji, count=10):
-    """Spawn particle effects"""
-    particles_js = ""
-    for i in range(count):
-        left = random.randint(20, 80)
-        delay = random.random() * 0.5
-        particles_js += f"""
-        setTimeout(() => {{
-            const p{i} = document.createElement('div');
-            p{i}.className = 'particle';
-            p{i}.textContent = '{emoji}';
-            p{i}.style.left = '{left}%';
-            p{i}.style.top = '{random.randint(30, 60)}%';
-            document.body.appendChild(p{i});
-            setTimeout(() => p{i}.remove(), 1000);
-        }}, {int(delay * 1000)});
-        """
-    
-    st.markdown(f"<script>{particles_js}</script>", unsafe_allow_html=True)
-
-def add_watermark():
-    """Add watermark"""
-    st.markdown(
-        '<div class="watermark">by WeGEM (Edwin) 🦾</div>',
-        unsafe_allow_html=True
-    )
+def add_signature():
+    """Add id³ signature"""
+    st.markdown('<div class="signature">id³</div>', unsafe_allow_html=True)
 
 def add_wallpaper_button():
     """Add floating wallpaper button"""
     st.markdown("""
-    <button class="wallpaper-fab" onclick="document.getElementById('wallpaper-btn').click()" title="Change Wallpaper">
-        🎨
-    </button>
-    <div style="display:none;">
+    <div class="wallpaper-fab" title="Change Wallpaper">🎨</div>
     """, unsafe_allow_html=True)
-    if st.button("🎨", key="wallpaper-btn"):
-        st.session_state.app_data['current_page'] = 'wallpaper'
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
 
-def calc_aura_score():
-    """Calculate total aura score"""
-    return sum(st.session_state.app_data['aura_stats'].values())
+def show_page(page_name):
+    """Navigate to a page"""
+    st.session_state.current_page = page_name
+    st.rerun()
 
-def add_xp(amount, aura_id=None):
-    """Add XP and handle level ups"""
-    data = st.session_state.app_data
-    data['user']['xp'] += amount
-    
-    if aura_id and aura_id in data['aura_stats']:
-        data['aura_stats'][aura_id] += amount // 8
-    
-    leveled_up = False
-    while data['user']['xp'] >= data['user']['xp_to_next']:
-        data['user']['xp'] -= data['user']['xp_to_next']
-        data['user']['level'] += 1
-        data['user']['xp_to_next'] = int(data['user']['xp_to_next'] * 1.45)
-        data['user']['aura_coins'] += data['user']['level'] * 18
-        leveled_up = True
-    
-    if leveled_up:
-        st.balloons()
-        spawn_particles('🎉', 20)
-        st.success(f"🎉 Level Up! You're now Level {data['user']['level']}!")
-    
-    today = datetime.date.today().isoformat()
-    if data['user']['last_active'] != today:
-        if data['user']['last_active']:
-            last = datetime.date.fromisoformat(data['user']['last_active'])
-            yesterday = datetime.date.today() - datetime.timedelta(days=1)
-            if last == yesterday:
-                data['user']['streak'] += 1
-                if data['user']['streak'] % 7 == 0:
-                    data['user']['aura_coins'] += 50
-                    spawn_particles('🔥', 15)
-                    st.success(f"🔥 {data['user']['streak']}-day streak! Bonus +50 coins!")
-            else:
-                data['user']['streak'] = 1
-        else:
-            data['user']['streak'] = 1
-        data['user']['last_active'] = today
-    
-    data['aura_history'].append({
-        'date': today,
-        'score': calc_aura_score()
-    })
-    
-    check_achievements()
-
-def check_achievements():
-    """Check and unlock achievements"""
-    data = st.session_state.app_data
-    for ach in data['achievements']:
-        if ach['unlocked']:
-            continue
-        
-        if ach['id'] == 'first_quest' and data['total_quests'] >= 1:
-            ach['unlocked'] = True
-        elif ach['id'] == 'streak3' and data['user']['streak'] >= 3:
-            ach['unlocked'] = True
-        elif ach['id'] == 'streak7' and data['user']['streak'] >= 7:
-            ach['unlocked'] = True
-        elif ach['id'] == 'quest10' and data['total_quests'] >= 10:
-            ach['unlocked'] = True
-        elif ach['id'] == 'maze3' and data['total_mazes'] >= 3:
-            ach['unlocked'] = True
-        elif ach['id'] == 'maze10' and data['total_mazes'] >= 10:
-            ach['unlocked'] = True
-        elif ach['id'] == 'aura100' and calc_aura_score() >= 100:
-            ach['unlocked'] = True
-        elif ach['id'] == 'aura250' and calc_aura_score() >= 250:
-            ach['unlocked'] = True
-        
-        if ach['unlocked']:
-            data['user']['aura_coins'] += 40
-            spawn_particles(ach['icon'], 10)
-            st.toast(f"🏆 Achievement Unlocked: {ach['name']}!")
-
-def generate_daily_quests():
-    """Generate daily quests"""
-    data = st.session_state.app_data
-    today = datetime.date.today().isoformat()
-    
-    if data['daily_quest_date'] == today and data['daily_quests']:
-        return
-    
-    daily_pool = [
-        {'title': 'Drink 8 glasses of water', 'xp': 15, 'aura': 'vitality'},
-        {'title': '10 min meditation', 'xp': 20, 'aura': 'mindfulness'},
-        {'title': 'Read for 30 minutes', 'xp': 25, 'aura': 'focus'},
-        {'title': 'Write in journal', 'xp': 15, 'aura': 'mindfulness'},
-        {'title': 'Go for a 20 min walk', 'xp': 20, 'aura': 'vitality'},
-        {'title': 'Practice a skill for 1 hour', 'xp': 35, 'aura': 'discipline'},
-        {'title': 'Have a deep conversation', 'xp': 25, 'aura': 'empathy'},
-        {'title': 'Try something new', 'xp': 30, 'aura': 'creativity'},
-        {'title': 'Face a small fear', 'xp': 30, 'aura': 'courage'},
-        {'title': 'Do a random act of kindness', 'xp': 20, 'aura': 'empathy'},
-    ]
-    
-    selected = random.sample(daily_pool, min(3, len(daily_pool)))
-    data['daily_quests'] = []
-    for i, quest in enumerate(selected):
-        data['daily_quests'].append({
-            'id': f"daily_{today}_{i}",
-            'title': quest['title'],
-            'xp': quest['xp'],
-            'aura': quest['aura'],
-            'completed': False,
-            'date': today
-        })
-    data['daily_quest_date'] = today
-
-def generate_maze(size=9):
-    """Generate a solvable maze"""
-    if size % 2 == 0:
-        size += 1
-    grid = [[1 for _ in range(size)] for _ in range(size)]
-    
-    def carve(r, c):
-        grid[r][c] = 0
-        dirs = [(0, 2), (2, 0), (0, -2), (-2, 0)]
-        random.shuffle(dirs)
-        for dr, dc in dirs:
-            nr, nc = r + dr, c + dc
-            if 0 < nr < size-1 and 0 < nc < size-1 and grid[nr][nc] == 1:
-                grid[r + dr//2][c + dc//2] = 0
-                carve(nr, nc)
-    
-    carve(1, 1)
-    grid[size-2][size-2] = 2
-    
-    if grid[size-3][size-2] == 1 and grid[size-2][size-3] == 1:
-        grid[size-3][size-2] = 0
-    
-    return grid
-
-if 'maze' not in st.session_state:
-    st.session_state.maze = generate_maze(9)
-    st.session_state.player_pos = [1, 1]
-    st.session_state.maze_size = 9
-    st.session_state.last_drag = None
-
-def render_maze_html(grid, player_pos):
-    """Render maze with drag support"""
-    size = len(grid)
-    html = f'<div class="maze-wrapper"><div class="maze-container" style="--maze-size: {size};">'
-    
-    for r in range(size):
-        html += '<div class="maze-row">'
-        for c in range(size):
-            cell_id = f"cell_{r}_{c}"
-            cell_class = 'maze-wall'
-            content = ''
-            
-            if grid[r][c] == 0:
-                cell_class = 'maze-path'
-            elif grid[r][c] == 2:
-                cell_class = 'maze-goal'
-                content = '🏁'
-            
-            if r == player_pos[0] and c == player_pos[1]:
-                cell_class = 'maze-player'
-                content = '🦾'
-            
-            html += f'<div class="maze-cell {cell_class}" id="{cell_id}" data-r="{r}" data-c="{c}">{content}</div>'
-        html += '</div>'
-    
-    html += '</div></div>'
-    
-    # Add drag and click handling JavaScript
-    html += """
-    <script>
-    (function() {
-        const mazeContainer = document.querySelector('.maze-container');
-        if (!mazeContainer) return;
-        
-        let isDragging = false;
-        let startX = 0;
-        let startY = 0;
-        let lastMoveTime = 0;
-        
-        function sendDirection(direction) {
-            const now = Date.now();
-            if (now - lastMoveTime < 150) return;
-            lastMoveTime = now;
-            
-            const input = document.getElementById('maze-direction-input');
-            if (input) {
-                input.value = direction;
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                setTimeout(() => { input.value = ''; }, 100);
-            }
-        }
-        
-        // Touch events for drag
-        mazeContainer.addEventListener('touchstart', function(e) {
-            isDragging = true;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            e.preventDefault();
-        }, { passive: false });
-        
-        mazeContainer.addEventListener('touchmove', function(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            
-            const dx = e.touches[0].clientX - startX;
-            const dy = e.touches[0].clientY - startY;
-            const threshold = 20;
-            
-            if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    sendDirection(dx > 0 ? 'right' : 'left');
-                } else {
-                    sendDirection(dy > 0 ? 'down' : 'up');
-                }
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-            }
-        }, { passive: false });
-        
-        mazeContainer.addEventListener('touchend', function() {
-            isDragging = false;
-        });
-        
-        // Mouse events for drag
-        mazeContainer.addEventListener('mousedown', function(e) {
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-        });
-        
-        mazeContainer.addEventListener('mousemove', function(e) {
-            if (!isDragging) return;
-            
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            const threshold = 15;
-            
-            if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    sendDirection(dx > 0 ? 'right' : 'left');
-                } else {
-                    sendDirection(dy > 0 ? 'down' : 'up');
-                }
-                startX = e.clientX;
-                startY = e.clientY;
-            }
-        });
-        
-        mazeContainer.addEventListener('mouseup', function() {
-            isDragging = false;
-        });
-        
-        mazeContainer.addEventListener('mouseleave', function() {
-            isDragging = false;
-        });
-        
-        // Click on individual cells
-        document.querySelectorAll('.maze-cell').forEach(cell => {
-            cell.addEventListener('click', function() {
-                const r = parseInt(this.dataset.r);
-                const c = parseInt(this.dataset.c);
-                const playerR = ''' + str(player_pos[0]) + ''';
-                const playerC = ''' + str(player_pos[1]) + ''';
-                
-                const dr = r - playerR;
-                const dc = c - playerC;
-                
-                if (Math.abs(dr) + Math.abs(dc) === 1) {
-                    if (dr === -1) sendDirection('up');
-                    else if (dr === 1) sendDirection('down');
-                    else if (dc === -1) sendDirection('left');
-                    else if (dc === 1) sendDirection('right');
-                }
-            });
-        });
-    })();
-    </script>
-    """
-    
-    return html
-
-def move_player(direction):
-    """Move player in maze"""
-    r, c = st.session_state.player_pos
-    maze = st.session_state.maze
-    
-    if direction == 'up' and r > 0 and maze[r-1][c] != 1:
-        st.session_state.player_pos = [r-1, c]
-    elif direction == 'down' and r < len(maze)-1 and maze[r+1][c] != 1:
-        st.session_state.player_pos = [r+1, c]
-    elif direction == 'left' and c > 0 and maze[r][c-1] != 1:
-        st.session_state.player_pos = [r, c-1]
-    elif direction == 'right' and c < len(maze[0])-1 and maze[r][c+1] != 1:
-        st.session_state.player_pos = [r, c+1]
-    
-    if maze[st.session_state.player_pos[0]][st.session_state.player_pos[1]] == 2:
-        st.session_state.app_data['total_mazes'] += 1
-        coins_earned = random.randint(20, 50)
-        st.session_state.app_data['user']['aura_coins'] += coins_earned
-        aura = st.session_state.app_data['selected_auras'][0] if st.session_state.app_data['selected_auras'] else None
-        add_xp(40, aura)
-        check_achievements()
-        spawn_particles('🧩', 15)
-        st.success(f"🧩 Maze completed! +40 XP +{coins_earned} coins!")
-        st.balloons()
-        st.session_state.maze = generate_maze(st.session_state.maze_size)
-        st.session_state.player_pos = [1, 1]
-        st.rerun()
-
-def show_home():
-    """Home page"""
-    st.markdown('<h1 class="title-text">AuraRise</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align:center; color: #888; font-size: clamp(0.9rem, 1.5vw, 1.1rem);">Shape your energy. Master discipline, confidence, and more. 🦾</p>', unsafe_allow_html=True)
-    
-    data = st.session_state.app_data
-    
-    if not data['selected_auras']:
-        st.markdown("### 🌟 Select Your Auras to Begin")
-        st.markdown("*Choose the energies you want to cultivate*")
-        
-        cols = st.columns(4)
-        for i, aura in enumerate(AURAS):
-            with cols[i % 4]:
-                selected = aura['id'] in data['selected_auras']
-                st.markdown(f"""
-                <div class="aura-card {'selected' if selected else ''}">
-                    <div style="font-size: clamp(2rem, 4vw, 3rem);">{aura['icon']}</div>
-                    <h4 style="font-size: clamp(0.9rem, 1.5vw, 1.1rem);">{aura['name']}</h4>
-                    <small style="color: #888; font-size: clamp(0.7rem, 1vw, 0.85rem);">{aura['desc']}</small>
-                </div>
-                """, unsafe_allow_html=True)
-                if st.button(f"{'✅' if selected else 'Select'} {aura['name']}", key=f"aura_{aura['id']}", use_container_width=True):
-                    if selected:
-                        data['selected_auras'].remove(aura['id'])
-                        if aura['id'] in data['aura_stats']:
-                            del data['aura_stats'][aura['id']]
-                    else:
-                        data['selected_auras'].append(aura['id'])
-                        data['aura_stats'][aura['id']] = random.randint(5, 20)
-                    st.rerun()
-        
-        if data['selected_auras']:
-            st.success(f"✨ {len(data['selected_auras'])} auras selected!")
-            if st.button("🚀 Start Your Journey", use_container_width=True, type="primary"):
-                st.rerun()
-        return
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        score = calc_aura_score()
-        tier = '🌟 Legend' if score >= 250 else '✨ Master' if score >= 100 else '🔮 Adept' if score >= 50 else '🌱 Novice'
-        
-        st.markdown(f"""
-        <div style="text-align: center; padding: clamp(15px, 3vw, 30px);">
-            <div style="font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; background: linear-gradient(135deg, #00c6ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" class="neon-text">
-                {score}
-            </div>
-            <div style="font-size: clamp(1rem, 2vw, 1.2rem); margin-top: -10px;">⚡ Aura Score</div>
-            <div class="user-badge" style="background: rgba(255,255,255,0.1); margin-top: 10px;">{tier}</div>
+# ============================================================
+#  PAGES
+# ============================================================
+def show_landing():
+    """Landing page"""
+    st.markdown("""
+    <div style="max-width: 460px; margin: 0 auto;">
+        <div class="glass-container" style="text-align: center;">
+            <span class="landing-badge">✦ v2.0</span>
+            <div style="font-size: 68px; line-height: 1; margin-bottom: 8px;">⚡</div>
+            <h1 class="landing-title">Aura Builder</h1>
+            <p class="tagline">Train your presence. <strong>Manifest your aura.</strong></p>
         </div>
-        """, unsafe_allow_html=True)
-        
-        xp_pct = min(data['user']['xp'] / data['user']['xp_to_next'] * 100, 100)
-        st.markdown(f"""
-        <div style="margin: 20px 0;">
-            <div style="display: flex; justify-content: space-between;">
-                <span>⚡ XP Progress</span>
-                <span>{data['user']['xp']} / {data['user']['xp_to_next']}</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: {xp_pct}%; background: linear-gradient(90deg, #f5a623, #ffd700);"></div>
-            </div>
-            <div style="text-align: center; margin-top: 5px;">⭐ Level {data['user']['level']}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("### 📊 Aura Progress")
-        for aura_id in data['selected_auras']:
-            aura = next((a for a in AURAS if a['id'] == aura_id), None)
-            if aura:
-                val = data['aura_stats'].get(aura_id, 0)
-                pct = min(val / 50 * 100, 100)
-                st.markdown(f"""
-                <div style="margin: 10px 0;">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>{aura['icon']} {aura['name']}</span>
-                        <span style="font-weight: 600;">{val}</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: {pct}%; background: {aura['color']};"></div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("### 📈 Stats")
-        
-        st.markdown(f"""
-        <div class="stat-card">
-            <div style="font-size: clamp(1.5rem, 3vw, 2rem);">{data['user']['avatar']}</div>
-            <h4>Level {data['user']['level']}</h4>
-            <p>🪙 {data['user']['aura_coins']} coins</p>
-            <p>🔥 {data['user']['streak']} day streak</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown(f"""
-        <div class="stat-card" style="margin-top: 10px;">
-            <div style="font-size: clamp(1.5rem, 3vw, 2rem);">🎯</div>
-            <h4>{data['total_quests']}</h4>
-            <p>Quests Completed</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown(f"""
-        <div class="stat-card" style="margin-top: 10px;">
-            <div style="font-size: clamp(1.5rem, 3vw, 2rem);">🧩</div>
-            <h4>{data['total_mazes']}</h4>
-            <p>Mazes Solved</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-def show_quests():
-    """Quests page"""
-    st.markdown("## 🎯 Quest Board")
-    
-    data = st.session_state.app_data
-    generate_daily_quests()
-    
-    tab1, tab2, tab3 = st.tabs(["📅 Daily", "📋 Active", "✅ Done"])
-    
-    with tab1:
-        st.markdown("### Today's Daily Quests")
-        
-        for quest in data['daily_quests']:
-            if not quest['completed']:
-                col1, col2, col3 = st.columns([3, 1, 1])
-                with col1:
-                    aura = next((a for a in AURAS if a['id'] == quest['aura']), None)
-                    st.markdown(f"**{aura['icon'] if aura else '📌'} {quest['title']}**")
-                with col2:
-                    st.markdown(f"<span style='color: #f5a623;'>+{quest['xp']} XP</span>", unsafe_allow_html=True)
-                with col3:
-                    if st.button("✅", key=f"daily_{quest['id']}", use_container_width=True):
-                        quest['completed'] = True
-                        data['total_quests'] += 1
-                        add_xp(quest['xp'], quest['aura'])
-                        spawn_particles('✅', 8)
-                        st.success(f"✅ Quest completed! +{quest['xp']} XP")
-                        st.rerun()
-            else:
-                st.markdown(f"~~{quest['title']}~~ ✅")
-    
-    with tab2:
-        st.markdown("### Active Quests")
-        
-        with st.expander("➕ Create New Quest", expanded=False):
-            quest_title = st.text_input("Quest Title", placeholder="e.g., Read for 30 minutes")
-            quest_aura = st.selectbox("Related Aura", [a['id'] for a in AURAS], 
-                                     format_func=lambda x: next((a['icon'] + ' ' + a['name'] for a in AURAS if a['id'] == x), x))
-            quest_xp = st.slider("XP Reward", 10, 100, 25)
-            
-            if st.button("✨ Create Quest", use_container_width=True) and quest_title:
-                data['quests'].append({
-                    'id': f"quest_{int(time.time())}",
-                    'title': quest_title,
-                    'xp': quest_xp,
-                    'aura': quest_aura,
-                    'completed': False,
-                    'created': datetime.date.today().isoformat()
-                })
-                st.success("Quest created!")
-                st.rerun()
-        
-        active_quests = [q for q in data['quests'] if not q['completed']]
-        if active_quests:
-            for quest in active_quests:
-                col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
-                with col1:
-                    aura = next((a for a in AURAS if a['id'] == quest['aura']), None)
-                    st.markdown(f"**{aura['icon'] if aura else '📌'} {quest['title']}**")
-                with col2:
-                    st.markdown(f"<span style='color: #f5a623;'>+{quest['xp']}</span>", unsafe_allow_html=True)
-                with col3:
-                    if st.button("✅", key=f"complete_{quest['id']}"):
-                        quest['completed'] = True
-                        data['total_quests'] += 1
-                        add_xp(quest['xp'], quest['aura'])
-                        spawn_particles('✅', 5)
-                        st.success(f"✅ Completed! +{quest['xp']} XP")
-                        st.rerun()
-                with col4:
-                    if st.button("🗑️", key=f"delete_{quest['id']}"):
-                        data['quests'].remove(quest)
-                        st.rerun()
-        else:
-            st.info("No active quests. Create one above!")
-    
-    with tab3:
-        completed = [q for q in data['quests'] if q['completed']] + [q for q in data['daily_quests'] if q['completed']]
-        if completed:
-            for quest in completed[-20:]:
-                st.markdown(f"✅ {quest['title']} - *+{quest['xp']} XP*")
-        else:
-            st.info("No completed quests yet.")
-
-def show_journal():
-    """Journal page"""
-    st.markdown("## 📖 Reflective Journal")
-    
-    data = st.session_state.app_data
-    
-    with st.expander("✍️ Write New Entry", expanded=True):
-        col1, col2 = st.columns(2)
-        with col1:
-            mood = st.selectbox("Mood", ["😊 Great", "🙂 Good", "😐 Okay", "😔 Low", "💪 Motivated", "🧘 Peaceful"])
-        with col2:
-            tags = st.multiselect("Tags", ["Gratitude", "Learning", "Challenge", "Success", "Reflection", "Goal"])
-        
-        entry_title = st.text_input("Title (optional)", placeholder="Today's reflection...")
-        entry_text = st.text_area("Your thoughts", height=150, placeholder="What did you learn today?")
-        
-        if st.button("💾 Save Entry", use_container_width=True):
-            if entry_text:
-                data['journal'].append({
-                    'id': f"journal_{int(time.time())}",
-                    'date': datetime.date.today().isoformat(),
-                    'time': datetime.datetime.now().strftime("%H:%M"),
-                    'title': entry_title or 'Untitled',
-                    'content': entry_text,
-                    'mood': mood,
-                    'tags': tags
-                })
-                add_xp(15, 'mindfulness')
-                spawn_particles('📝', 8)
-                st.success("📝 Journal entry saved! +15 XP")
-                st.rerun()
-    
-    st.markdown("### 📚 Your Entries")
-    
-    if data['journal']:
-        search = st.text_input("🔍 Search", placeholder="Search entries...")
-        entries = data['journal'][::-1]
-        if search:
-            entries = [e for e in entries if search.lower() in e.get('content', '').lower()]
-        
-        for entry in entries[:20]:
-            with st.container():
-                border_color = '#4ade80' if 'Great' in entry.get('mood','') else '#a855f7' if 'Motivated' in entry.get('mood','') else '#f5a623'
-                st.markdown(f"""
-                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin: 10px 0; border-left: 4px solid {border_color};">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <strong>{entry.get('title', 'Untitled')}</strong>
-                        <small style="color: #888;">📅 {entry['date']} · {entry.get('mood', '')}</small>
-                    </div>
-                    <p style="font-size: 0.9rem;">{entry['content'][:200]}{'...' if len(entry['content']) > 200 else ''}</p>
-                </div>
-                """, unsafe_allow_html=True)
-    else:
-        st.info("📖 No journal entries yet.")
-
-def show_achievements():
-    """Achievements page"""
-    st.markdown("## 🏆 Achievements")
-    
-    data = st.session_state.app_data
-    check_achievements()
-    
-    unlocked = sum(1 for a in data['achievements'] if a['unlocked'])
-    total = len(data['achievements'])
-    
-    st.markdown(f"### Progress: {unlocked}/{total}")
-    
-    progress_pct = (unlocked / total * 100) if total > 0 else 0
-    st.markdown(f"""
-    <div class="progress-bar" style="margin: 20px 0;">
-        <div class="progress-fill" style="width: {progress_pct}%; background: linear-gradient(90deg, #f5a623, #ffd700);"></div>
     </div>
     """, unsafe_allow_html=True)
     
-    cols = st.columns(4)
-    for i, ach in enumerate(data['achievements']):
-        with cols[i % 4]:
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        if st.button("Begin Journey", key="begin_btn", use_container_width=True):
+            show_page('select')
+    with col2:
+        if st.button("Continue →", key="continue_btn", use_container_width=True):
+            if st.session_state.selected_auras:
+                show_page('tracker')
+            else:
+                show_page('select')
+
+def show_select():
+    """Aura selection page"""
+    st.markdown("""
+    <div style="max-width: 460px; margin: 0 auto;">
+        <div class="glass-container">
+            <div style="margin-bottom: 20px;">
+                <h2 style="font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: #0f172a;">Choose Your Aura</h2>
+                <p style="color: #64748b; font-size: 14px; margin-top: 2px;">Select up to 2 to shape your presence</p>
+            </div>
+    """, unsafe_allow_html=True)
+    
+    # Counter chip
+    selected_count = len(st.session_state.selected_auras)
+    st.markdown(f"""
+        <div class="counter-chip">
+            <span>✧</span> <strong>{selected_count}</strong><span>/2 selected</span>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # Aura buttons
+    for aura_key, aura in AURAS.items():
+        is_selected = aura_key in st.session_state.selected_auras
+        col1, col2, col3 = st.columns([0.15, 0.7, 0.15])
+        with col1:
+            st.markdown(f"<div style='font-size: 26px; padding-top: 12px;'>{aura['emoji']}</div>", unsafe_allow_html=True)
+        with col2:
             st.markdown(f"""
-            <div class="achievement-card {'unlocked' if ach['unlocked'] else ''}" style="opacity: {'1' if ach['unlocked'] else '0.5'};">
-                <div style="font-size: clamp(2rem, 4vw, 3rem);">{ach['icon']}</div>
-                <h4 style="font-size: clamp(0.8rem, 1.5vw, 1rem);">{ach['name']}</h4>
-                <small style="color: #888;">{ach['desc']}</small>
-                <div style="margin-top: 10px;">{'✅ Unlocked!' if ach['unlocked'] else '🔒 Locked'}</div>
+            <div style="padding: 8px 0;">
+                <strong style="color: #0f172a; font-size: 16px;">{aura['name']}</strong><br>
+                <small style="color: #64748b;">{aura['desc']}</small>
             </div>
             """, unsafe_allow_html=True)
-
-def show_maze():
-    """Maze game page with drag navigation"""
-    st.markdown("## 🧩 The Aura Maze")
-    st.markdown("*Drag your finger/mouse across the maze to navigate!*")
-    
-    data = st.session_state.app_data
-    
-    col1, col2, col3 = st.columns([2, 1, 1])
-    with col1:
-        st.markdown(f"🏆 **Mazes completed: {data['total_mazes']}**")
-    with col2:
-        maze_size = st.selectbox("Size", [7, 9, 11], index=1, key="maze_size_select")
-        if maze_size != st.session_state.maze_size:
-            st.session_state.maze_size = maze_size
-            st.session_state.maze = generate_maze(maze_size)
-            st.session_state.player_pos = [1, 1]
-            st.rerun()
-    with col3:
-        if st.button("🔄 New Maze", use_container_width=True):
-            st.session_state.maze = generate_maze(st.session_state.maze_size)
-            st.session_state.player_pos = [1, 1]
-            st.rerun()
-    
-    # Hidden input for JavaScript direction
-    direction = st.text_input("", key="maze-direction-input", label_visibility="collapsed")
-    if direction:
-        move_player(direction)
-        st.rerun()
-    
-    # Arrow buttons
-    st.markdown("### 🕹️ Controls (or drag on maze)")
-    c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1, 1])
-    with c1:
-        st.write("")
-    with c2:
-        if st.button("⬆️", use_container_width=True, key="btn_up"):
-            move_player('up')
-            st.rerun()
-    with c3:
-        st.write("")
-    with c4:
-        if st.button("🔄", use_container_width=True, key="btn_reset"):
-            st.session_state.maze = generate_maze(st.session_state.maze_size)
-            st.session_state.player_pos = [1, 1]
-            st.rerun()
-    with c5:
-        st.write("")
-    
-    c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1, 1])
-    with c1:
-        st.write("")
-    with c2:
-        if st.button("⬅️", use_container_width=True, key="btn_left"):
-            move_player('left')
-            st.rerun()
-    with c3:
-        if st.button("⬇️", use_container_width=True, key="btn_down"):
-            move_player('down')
-            st.rerun()
-    with c4:
-        if st.button("➡️", use_container_width=True, key="btn_right"):
-            move_player('right')
-            st.rerun()
-    with c5:
-        st.write("")
-    
-    # Render maze
-    st.markdown("### 🗺️ Drag to Navigate")
-    st.markdown(render_maze_html(st.session_state.maze, st.session_state.player_pos), unsafe_allow_html=True)
-
-def show_chat():
-    """Chat page"""
-    st.markdown("## 💬 AuraRise Community")
-    
-    data = st.session_state.app_data
-    
-    col1, col2 = st.columns([1, 3])
-    
-    with col1:
-        st.markdown("### 🟢 Online")
+        with col3:
+            if is_selected:
+                st.markdown("<div style='font-size: 18px; padding-top: 14px; color: #0f172a;'>✓</div>", unsafe_allow_html=True)
         
-        for user in data['online_users']:
-            is_selected = data['current_chat_user'] == user['name']
-            st.markdown(f"""
-            <div style="background: rgba(255,255,255,{'0.1' if is_selected else '0.05'}); 
-                        padding: 12px; border-radius: 12px; margin: 5px 0;
-                        border: {'2px solid #00c6ff' if is_selected else '1px solid rgba(255,255,255,0.1)'};">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span class="online-dot"></span>
-                    <span style="font-size: 1.3rem;">{user['avatar']}</span>
-                    <div>
-                        <strong>{user['name']}</strong>
-                        <br><small style="color: #888;">{user['bio']}</small>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            if st.button(f"💬 {user['name']}", key=f"select_{user['name']}", use_container_width=True):
-                data['current_chat_user'] = user['name']
-                st.rerun()
+        if st.button("Select" if not is_selected else "Deselect", 
+                    key=f"aura_{aura_key}",
+                    use_container_width=True,
+                    type="primary" if is_selected else "secondary"):
+            toggle_aura(aura_key)
     
+    st.markdown("</div></div>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        if st.button("Continue", key="confirm_auras", use_container_width=True):
+            if st.session_state.selected_auras:
+                show_page('tracker')
+            else:
+                st.warning("Select at least one aura")
     with col2:
-        if data['current_chat_user']:
-            current_user = next((u for u in data['online_users'] if u['name'] == data['current_chat_user']), None)
-            st.markdown(f"### 💬 {current_user['avatar']} {data['current_chat_user']}")
-            
-            chat_container = st.container(height=350)
-            with chat_container:
-                chat_messages = [m for m in data['chat_messages'] 
-                               if (m['from'] == 'You' and m['to'] == data['current_chat_user']) or 
-                                  (m['to'] == 'You' and m['from'] == data['current_chat_user'])]
-                
-                for msg in chat_messages[-50:]:
-                    is_sent = msg['from'] == 'You'
-                    st.markdown(f"""
-                    <div style="display: flex; justify-content: {'flex-end' if is_sent else 'flex-start'}; margin: 6px 0;">
-                        <div class="chat-message {'sent' if is_sent else 'received'}">
-                            <small style="color: {'#000' if is_sent else '#888'};">
-                                {msg['from']} · {msg['time']}
-                            </small>
-                            <p style="margin: 3px 0 0 0;">{msg['text']}</p>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-            
-            with st.form(f"chat_form_{data['current_chat_user']}", clear_on_submit=True):
-                col1, col2 = st.columns([4, 1])
-                with col1:
-                    message = st.text_input("Message...", key=f"msg_{data['current_chat_user']}", label_visibility="collapsed")
-                with col2:
-                    send = st.form_submit_button("📤", use_container_width=True)
-                
-                if send and message:
-                    data['chat_messages'].append({
-                        'from': 'You', 'to': data['current_chat_user'],
-                        'text': message, 'time': datetime.datetime.now().strftime("%H:%M")
-                    })
-                    
-                    responses = [
-                        "That's awesome! 🎉", "I totally agree! 💯",
-                        "Great progress! 🌟", "You're amazing! 💪",
-                        "Let's level up! 🚀", "Thanks for sharing! 📝",
-                        "So inspiring! ✨", "What's your focus today? 🎯",
-                    ]
-                    
-                    time.sleep(0.8)
-                    data['chat_messages'].append({
-                        'from': data['current_chat_user'], 'to': 'You',
-                        'text': random.choice(responses), 'time': datetime.datetime.now().strftime("%H:%M")
-                    })
-                    st.rerun()
-        else:
-            st.info("👈 Select a member to start chatting!")
+        if st.button("← Back", key="back_landing", use_container_width=True):
+            show_page('landing')
 
-def show_shop():
-    """Shop page"""
-    st.markdown("## 🛒 Aura Shop")
+def toggle_aura(key):
+    """Toggle aura selection"""
+    if key in st.session_state.selected_auras:
+        st.session_state.selected_auras.remove(key)
+    elif len(st.session_state.selected_auras) < 2:
+        st.session_state.selected_auras.append(key)
+    st.rerun()
+
+def show_tracker():
+    """Main tracker page"""
+    if not st.session_state.selected_auras:
+        show_page('select')
+        return
     
-    data = st.session_state.app_data
-    st.markdown(f"### 🪙 **{data['user']['aura_coins']}** coins")
+    primary_aura = AURAS.get(st.session_state.selected_auras[0])
+    secondary_aura = AURAS.get(st.session_state.selected_auras[1]) if len(st.session_state.selected_auras) > 1 else None
     
-    items = [
-        {'name': 'Wizard', 'icon': '🧙', 'cost': 150, 'desc': 'Mystical wisdom'},
-        {'name': 'Superhero', 'icon': '🦸', 'cost': 200, 'desc': 'Heroic courage'},
-        {'name': 'Star', 'icon': '🌟', 'cost': 180, 'desc': 'Shining bright'},
-        {'name': 'Phoenix', 'icon': '🐦‍🔥', 'cost': 250, 'desc': 'Rise from ashes'},
-        {'name': 'Dragon', 'icon': '🐉', 'cost': 300, 'desc': 'Powerful focus'},
-        {'name': 'Ninja', 'icon': '🥷', 'cost': 220, 'desc': 'Silent discipline'},
-        {'name': 'Astronaut', 'icon': '🧑‍🚀', 'cost': 280, 'desc': 'Explore frontiers'},
-        {'name': 'Artist', 'icon': '👨‍🎨', 'cost': 160, 'desc': 'Creative genius'},
-    ]
+    st.markdown("""
+    <div style="max-width: 460px; margin: 0 auto;">
+        <div class="glass-container">
+    """, unsafe_allow_html=True)
     
-    cols = st.columns(4)
-    for i, item in enumerate(items):
-        with cols[i % 4]:
-            owned = item['icon'] in data['user']['unlocked_avatars']
-            is_current = data['user']['avatar'] == item['icon']
-            
+    # Header
+    if secondary_aura:
+        title = f"{primary_aura['emoji']} {primary_aura['name']} + {secondary_aura['emoji']} {secondary_aura['name']}"
+        subtitle = f"{primary_aura['desc']} + {secondary_aura['desc']}"
+        badge = f"⚡ {primary_aura['emoji']} {secondary_aura['emoji']}"
+    else:
+        title = f"{primary_aura['emoji']} {primary_aura['name']}"
+        subtitle = primary_aura['desc']
+        badge = f"⚡ {primary_aura['emoji']}"
+    
+    st.markdown(f"""
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+        <div>
+            <h2 style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; color: #0f172a;">{title}</h2>
+            <p style="color: #64748b; font-size: 13px; margin-top: 1px;">{subtitle}</p>
+        </div>
+        <div style="background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04); padding: 4px 14px; border-radius: 40px; font-size: 11px; color: #475569; font-weight: 500;">{badge}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Score ring
+    tasks = get_task_list()
+    total = len(tasks)
+    done = len([i for i in st.session_state.completed_tasks if i < total])
+    pct = round((done / total) * 100) if total > 0 else 0
+    
+    circumference = 2 * 3.14159 * 52
+    offset = circumference - (pct / 100) * circumference
+    
+    st.markdown(f"""
+    <div class="score-ring-container">
+        <div class="score-ring">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="6"/>
+                <circle cx="60" cy="60" r="52" fill="none" stroke="{primary_aura['accent']}" stroke-width="6" 
+                        stroke-linecap="round" stroke-dasharray="{circumference:.2f}" stroke-dashoffset="{offset:.2f}"/>
+            </svg>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                <div style="font-size: 34px; font-weight: 700; letter-spacing: -1px; line-height: 1; color: #0f172a;">{pct}%</div>
+                <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2px;">Aura Strength</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Tasks
+    st.markdown(f"""
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+        <span style="font-size: 13px; font-weight: 600; color: #475569;">Today's Practice</span>
+        <span style="color: #94a3b8; font-size: 13px;">{done}/{total} done</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    for i, task in enumerate(tasks):
+        is_completed = i in st.session_state.completed_tasks
+        col1, col2, col3 = st.columns([0.1, 0.8, 0.1])
+        with col1:
             st.markdown(f"""
-            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; text-align: center;
-                        border: {'2px solid #f5a623' if is_current else '1px solid rgba(255,255,255,0.1)'};">
-                <div style="font-size: 2.5rem;">{item['icon']}</div>
-                <h4 style="font-size: 0.9rem;">{item['name']}</h4>
-                <small style="color: #888;">{item['desc']}</small>
-                <p>{'✅ Current' if is_current else '✅ Owned' if owned else f'🪙 {item["cost"]}'}</p>
+            <div class="task-check" style="{'background: #0f172a; border-color: #0f172a; color: #fff;' if is_completed else ''}">
+                {'✓' if is_completed else ''}
             </div>
             """, unsafe_allow_html=True)
-            
-            if not owned:
-                if st.button(f"Buy", key=f"buy_{item['name']}", use_container_width=True):
-                    if data['user']['aura_coins'] >= item['cost']:
-                        data['user']['aura_coins'] -= item['cost']
-                        data['user']['unlocked_avatars'].append(item['icon'])
-                        data['user']['avatar'] = item['icon']
-                        spawn_particles(item['icon'], 8)
-                        st.success(f"🎉 Purchased {item['name']}!")
-                        st.rerun()
-                    else:
-                        st.error("Not enough coins!")
-            elif not is_current:
-                if st.button(f"Equip", key=f"equip_{item['name']}", use_container_width=True):
-                    data['user']['avatar'] = item['icon']
-                    st.success(f"✅ Equipped {item['name']}!")
-                    st.rerun()
+        with col2:
+            st.markdown(f"""
+            <div style="padding: 8px 0;">
+                <span class="task-text" style="{'text-decoration: line-through; color: #94a3b8;' if is_completed else 'color: #1e293b;'}">
+                    {task}
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
+        with col3:
+            if st.button("✓" if not is_completed else "↩", key=f"task_{i}", use_container_width=True):
+                toggle_task(i)
+    
+    # Calendar
+    st.markdown("### 📅 Streak Calendar")
+    render_calendar()
+    
+    # Actions
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("↺ Reset Today", use_container_width=True, key="reset_day"):
+            st.session_state.completed_tasks = []
+            today = datetime.date.today().isoformat()
+            if today in st.session_state.streak_data:
+                del st.session_state.streak_data[today]
+            st.rerun()
+    with col2:
+        if st.button("✧ Change Aura", use_container_width=True, key="change_aura"):
+            show_page('select')
+    
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
-def show_wallpaper_selector():
-    """Wallpaper selection"""
-    st.markdown("## 🎨 Choose Wallpaper")
+def toggle_task(i):
+    """Toggle task completion"""
+    if i in st.session_state.completed_tasks:
+        st.session_state.completed_tasks.remove(i)
+    else:
+        st.session_state.completed_tasks.append(i)
     
-    data = st.session_state.app_data
-    current_wp = data['user'].get('wallpaper', 'default')
+    tasks = get_task_list()
+    total = len(tasks)
+    done = len([x for x in st.session_state.completed_tasks if x < total])
+    today = datetime.date.today().isoformat()
     
-    categories = {
-        '🎯 Focus & Discipline': ['focus', 'discipline'],
-        '🎨 Creativity': ['creativity', 'adventure'],
-        '⚡ Energy': ['vitality', 'courage'],
-        '🧘 Mindfulness': ['mindfulness', 'balance'],
-        '🤝 Connection': ['empathy', 'resilience'],
-        '👑 Growth': ['leadership', 'default'],
-    }
+    if done == total and total > 0:
+        st.session_state.streak_data[today] = True
+    else:
+        if today in st.session_state.streak_data:
+            del st.session_state.streak_data[today]
     
-    for category, wp_list in categories.items():
-        st.markdown(f"### {category}")
-        cols = st.columns(len(wp_list))
-        for i, wp_name in enumerate(wp_list):
-            with cols[i]:
-                is_selected = current_wp == wp_name
+    st.rerun()
+
+def render_calendar():
+    """Render streak calendar"""
+    now = datetime.date.today()
+    year = now.year
+    month = now.month
+    
+    st.markdown(f"**{now.strftime('%B %Y')}**")
+    
+    days_in_month = (datetime.date(year, month + 1, 1) - datetime.timedelta(days=1)).day if month < 12 else 31
+    first_day = datetime.date(year, month, 1).weekday()
+    first_day = (first_day + 1) % 7  # Adjust to Sunday start
+    
+    weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+    cols = st.columns(7)
+    for i, day in enumerate(weekdays):
+        with cols[i]:
+            st.markdown(f"<small style='color: #94a3b8;'>{day}</small>", unsafe_allow_html=True)
+    
+    cols = st.columns(7)
+    day_count = 0
+    
+    for i in range(first_day):
+        with cols[i]:
+            st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
+    
+    for d in range(1, days_in_month + 1):
+        col_idx = (first_day + d - 1) % 7
+        date_str = datetime.date(year, month, d).isoformat()
+        is_active = date_str in st.session_state.streak_data
+        is_today = d == now.day and month == now.month and year == now.year
+        
+        with cols[col_idx]:
+            if is_active:
                 st.markdown(f"""
-                <div style="background: {WALLPAPERS[wp_name]}; height: 100px; border-radius: 15px;
-                          display: flex; align-items: center; justify-content: center;
-                          border: {'3px solid #00c6ff' if is_selected else '1px solid rgba(255,255,255,0.2)'};
-                          cursor: pointer;">
-                    <span style="background: rgba(0,0,0,0.6); padding: 8px 12px; border-radius: 8px; color: white; font-size: 0.8rem;">
-                        {wp_name.capitalize()}{' ✅' if is_selected else ''}
-                    </span>
+                <div class="cal-day active" style="background: {'#0f172a' if not st.session_state.selected_auras else AURAS.get(st.session_state.selected_auras[0], {}).get('accent', '#0f172a')}; color: #fff; border-radius: 10px; padding: 4px; text-align: center;">
+                    {d}
                 </div>
                 """, unsafe_allow_html=True)
-                if st.button(f"Select", key=f"wp_{wp_name}", use_container_width=True):
-                    data['user']['wallpaper'] = wp_name
-                    st.success(f"🎨 {wp_name} wallpaper set!")
+            elif is_today:
+                st.markdown(f"""
+                <div class="cal-day today" style="border: 2px solid #0f172a; border-radius: 10px; padding: 4px; text-align: center;">
+                    {d}
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                <div class="cal-day" style="border-radius: 10px; padding: 4px; text-align: center; color: #94a3b8;">
+                    {d}
+                </div>
+                """, unsafe_allow_html=True)
+
+def show_wallpaper_selector():
+    """Wallpaper selection page"""
+    st.markdown("## 🎨 Choose Your Wallpaper")
+    st.markdown(f"*{len(UNSPLASH_WALLPAPERS)}+ stunning wallpapers from Unsplash*")
+    
+    # Categories
+    categories = {
+        "Abstract & Gradients": list(range(0, 10)),
+        "Nature & Landscapes": list(range(10, 20)),
+        "Minimal & Clean": list(range(20, 30)),
+        "Dark & Moody": list(range(30, 40)),
+        "Warm & Golden": list(range(40, 45)),
+        "Cool & Blue": list(range(45, 50)),
+    }
+    
+    for cat_name, indices in categories.items():
+        st.markdown(f"### {cat_name}")
+        cols = st.columns(5)
+        for i, idx in enumerate(indices[:5]):
+            with cols[i]:
+                if idx < len(UNSPLASH_WALLPAPERS):
+                    wp_url = UNSPLASH_WALLPAPERS[idx]
+                    st.markdown(f"""
+                    <div style="background: url('{wp_url}') center/cover; 
+                              height: 80px; border-radius: 12px; cursor: pointer;
+                              border: {'3px solid #0f172a' if st.session_state.wallpaper == wp_url else '1px solid rgba(0,0,0,0.1)'};">
+                    </div>
+                    """, unsafe_allow_html=True)
+                    if st.button(f"Select", key=f"wp_{idx}", use_container_width=True):
+                        st.session_state.wallpaper = wp_url
+                        st.session_state.wallpaper_index = idx
+                        st.success("✅ Wallpaper updated!")
+                        st.rerun()
+    
+    # Random button
+    if st.button("🎲 Random Wallpaper", use_container_width=True):
+        st.session_state.wallpaper = random.choice(UNSPLASH_WALLPAPERS)
+        st.success("✅ Random wallpaper applied!")
+        st.rerun()
+    
+    # Pagination
+    st.markdown(f"**Showing {min(30, len(UNSPLASH_WALLPAPERS))} of {len(UNSPLASH_WALLPAPERS)} wallpapers**")
+    
+    # Show all in a grid
+    with st.expander("📸 Browse All Wallpapers"):
+        cols = st.columns(6)
+        for i, wp_url in enumerate(UNSPLASH_WALLPAPERS):
+            with cols[i % 6]:
+                st.markdown(f"""
+                <div style="background: url('{wp_url}') center/cover; 
+                          height: 60px; border-radius: 8px; margin: 2px 0;
+                          border: {'2px solid #0f172a' if st.session_state.wallpaper == wp_url else '1px solid rgba(0,0,0,0.05)'};">
+                </div>
+                """, unsafe_allow_html=True)
+                if st.button(f"Set", key=f"all_wp_{i}", use_container_width=True):
+                    st.session_state.wallpaper = wp_url
+                    st.session_state.wallpaper_index = i
                     st.rerun()
 
+# ============================================================
+#  BOTTOM NAVIGATION
+# ============================================================
 def render_bottom_nav():
     """Render bottom navigation bar"""
-    data = st.session_state.app_data
-    current = data.get('current_page', 'home')
+    current = st.session_state.current_page
     
     nav_items = [
-        ('home', '⚡', 'Home'),
-        ('quests', '🎯', 'Quests'),
-        ('journal', '📖', 'Journal'),
-        ('achievements', '🏆', 'Achieve'),
-        ('maze', '🧩', 'Maze'),
-        ('chat', '💬', 'Chat'),
-        ('shop', '🛒', 'Shop'),
+        ('landing', '⚡', 'Home'),
+        ('select', '✧', 'Auras'),
+        ('tracker', '🎯', 'Tracker'),
+        ('wallpaper', '🎨', 'Walls'),
     ]
     
-    # Use columns for bottom nav simulation with buttons
-    st.markdown('<div class="bottom-nav">', unsafe_allow_html=True)
     cols = st.columns(len(nav_items))
-    
     for i, (page, icon, label) in enumerate(nav_items):
         with cols[i]:
             is_active = current == page
-            if st.button(f"{icon}\n{label}", key=f"nav_{page}", use_container_width=True,
-                        help=label,
+            if st.button(f"{icon} {label}", key=f"nav_{page}", use_container_width=True,
                         type="primary" if is_active else "secondary"):
-                data['current_page'] = page
+                st.session_state.current_page = page
                 st.rerun()
-    
-    st.markdown('</div>', unsafe_allow_html=True)
 
+# ============================================================
+#  MAIN
+# ============================================================
 def main():
     """Main application"""
     set_background()
-    add_watermark()
+    add_signature()
     add_wallpaper_button()
     
-    if st.session_state.app_data['selected_auras']:
-        generate_daily_quests()
-        check_achievements()
+    current_page = st.session_state.current_page
     
-    # Determine current page
-    current_page = st.session_state.app_data.get('current_page', 'home')
-    
-    # Render current page
-    if current_page == 'home':
-        show_home()
-    elif current_page == 'quests':
-        show_quests()
-    elif current_page == 'journal':
-        show_journal()
-    elif current_page == 'achievements':
-        show_achievements()
-    elif current_page == 'maze':
-        show_maze()
-    elif current_page == 'chat':
-        show_chat()
-    elif current_page == 'shop':
-        show_shop()
+    # Page content
+    if current_page == 'landing':
+        show_landing()
+    elif current_page == 'select':
+        show_select()
+    elif current_page == 'tracker':
+        show_tracker()
     elif current_page == 'wallpaper':
         show_wallpaper_selector()
     
-    # Add padding for bottom nav
+    # Padding for bottom nav
     st.markdown('<div style="height: 80px;"></div>', unsafe_allow_html=True)
     
-    # Render bottom navigation
+    # Bottom navigation
+    st.markdown('<div class="bottom-nav">', unsafe_allow_html=True)
     render_bottom_nav()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
