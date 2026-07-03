@@ -14,7 +14,6 @@
             --safe-bottom: env(safe-area-inset-bottom, 16px);
             --radius: 32px;
             --radius-sm: 16px;
-            --radius-xs: 12px;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
@@ -27,32 +26,25 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            padding-bottom: calc(100px + var(--safe-bottom));
+            padding-bottom: 120px;
             -webkit-tap-highlight-color: transparent;
             -webkit-user-select: none;
             user-select: none;
             overflow-x: hidden;
-            transition: background 0.9s cubic-bezier(0.22,1,0.36,1);
         }
         body::before {
             content: '';
-            position: fixed;
-            top:0; left:0; right:0; bottom:0;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            z-index: -2;
-            transition: background-image 0.9s ease;
+            position: fixed; top:0; left:0; right:0; bottom:0;
+            background-size: cover; background-position: center;
+            background-attachment: fixed; z-index: -2;
         }
         body::after {
             content: '';
-            position: fixed;
-            top:0; left:0; right:0; bottom:0;
-            background: rgba(255,255,255,0.22);
-            z-index: -1;
+            position: fixed; top:0; left:0; right:0; bottom:0;
+            background: rgba(255,255,255,0.22); z-index: -1;
             pointer-events: none;
         }
-        ::-webkit-scrollbar { width:3px; height:3px; }
+        ::-webkit-scrollbar { width:3px; }
         ::-webkit-scrollbar-track { background:transparent; }
         ::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.1); border-radius:10px; }
 
@@ -61,1138 +53,1020 @@
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
         .container {
-            width:100%;
-            max-width:480px;
-            margin:0 auto;
+            width:100%; max-width:480px; margin:0 auto;
             background: var(--surface);
             backdrop-filter: blur(24px) saturate(1.6);
             -webkit-backdrop-filter: blur(24px) saturate(1.6);
             border: 1px solid rgba(255,255,255,0.6);
-            border-radius: var(--radius);
-            padding: 32px 28px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.02) inset;
-            position: relative;
-            overflow: hidden;
-        }
-        .container::before {
-            content: '';
-            position: absolute;
-            top:-50%; left:-50%; width:200%; height:200%;
-            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .container > * { position:relative; z-index:1; }
-
-        .signature {
-            position: fixed;
-            bottom: 105px;
-            right: 24px;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 2.5px;
-            color: #0f172a;
-            opacity: 0.25;
-            z-index: 100;
-            background: rgba(255,255,255,0.4);
-            padding: 6px 14px;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.2);
-            pointer-events: none;
+            border-radius: var(--radius); padding: 28px 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.06);
         }
 
         button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 14px 20px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            font-family: var(--font);
-            letter-spacing: 0.2px;
-            width: 100%;
-            outline: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 14px 20px; border: none; border-radius: var(--radius-sm);
+            font-size: 14px; font-weight: 500; cursor: pointer;
+            font-family: var(--font); width: 100%; outline: none;
             -webkit-tap-highlight-color: transparent;
-            transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
-            color: inherit;
+            transition: all 0.25s; color: inherit;
         }
         button:active { transform: scale(0.97); }
         .btn-primary {
-            background: #0f172a;
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
-            padding: 18px;
+            background: #0f172a; color: #fff; font-weight: 600;
+            font-size: 16px; padding: 18px;
             box-shadow: 0 4px 16px rgba(15,23,42,0.15);
         }
-        .btn-primary:hover { background: #1e293b; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(15,23,42,0.2); }
+        .btn-primary:hover { background: #1e293b; }
         .btn-secondary {
-            background: transparent;
-            border: 1px solid rgba(0,0,0,0.08);
-            color: #64748b;
-            margin-top: 8px;
+            background: transparent; border: 1px solid rgba(0,0,0,0.08);
+            color: #64748b; margin-top: 8px;
         }
-        .btn-secondary:hover { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.15); color: #0f172a; }
         .btn-sm {
-            padding: 8px 14px;
-            font-size: 12px;
-            border-radius: var(--radius-xs);
-            background: rgba(255,255,255,0.5);
-            border: 1px solid rgba(0,0,0,0.06);
-            color: #475569;
-            width: auto;
+            padding: 8px 14px; font-size: 12px; border-radius: 12px;
+            background: rgba(255,255,255,0.5); border: 1px solid rgba(0,0,0,0.06);
+            color: #475569; width: auto;
         }
-        .btn-sm:hover { background: #fff; border-color: rgba(0,0,0,0.12); }
         .btn-danger { color: #ef4444 !important; }
-        .btn-danger:hover { border-color: #fecaca !important; color: #dc2626 !important; }
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            padding: 0;
-            background: rgba(255,255,255,0.5);
-            border: 1px solid rgba(0,0,0,0.06);
-            font-size: 16px;
-            flex-shrink: 0;
-        }
 
         .landing-content { text-align: center; }
-        .landing-icon { font-size: 80px; line-height: 1; margin-bottom: 16px; display: block; }
+        .landing-icon { font-size: 80px; margin-bottom: 16px; display: block; }
         .landing-title {
-            font-size: 48px;
-            font-weight: 800;
-            letter-spacing: -2px;
+            font-size: 48px; font-weight: 800; letter-spacing: -2px;
             background: linear-gradient(135deg, #0f172a 60%, #475569);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
         }
         .landing-subtitle { color: #64748b; font-size: 15px; margin-bottom: 40px; }
 
         .counter-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(0,0,0,0.04);
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-size: 13px;
-            color: #475569;
-            border: 1px solid rgba(0,0,0,0.04);
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(0,0,0,0.04); padding: 6px 16px;
+            border-radius: 40px; font-size: 13px; color: #475569;
             margin-bottom: 18px;
         }
-        .counter-chip strong { color: #0f172a; }
 
-        .aura-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-        @media (min-width: 400px) { .aura-grid { grid-template-columns: 1fr 1fr; } }
+        .aura-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        @media (max-width: 400px) { .aura-grid { grid-template-columns: 1fr; } }
 
         .aura-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: rgba(255,255,255,0.5);
-            border: 1.5px solid rgba(0,0,0,0.04);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+            background: rgba(255,255,255,0.5); border: 1.5px solid rgba(0,0,0,0.04);
+            border-radius: var(--radius-sm); cursor: pointer; transition: all 0.25s;
         }
-        .aura-btn:hover { border-color: rgba(0,0,0,0.12); background: rgba(255,255,255,0.8); transform: translateY(-1px); }
-        .aura-btn.selected { border-color: #0f172a; background: rgba(255,255,255,0.9); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
-        .aura-btn .emoji { font-size: 28px; flex-shrink: 0; }
-        .aura-btn .info h3 { font-size: 14px; font-weight: 600; color: #0f172a; }
-        .aura-btn .info p { font-size: 11px; color: #64748b; margin-top: 1px; }
-        .aura-btn .check-mark { margin-left: auto; opacity: 0; font-size: 16px; color: #0f172a; transition: opacity 0.25s; }
+        .aura-btn:hover { border-color: rgba(0,0,0,0.15); background: rgba(255,255,255,0.8); }
+        .aura-btn.selected { border-color: #0f172a; background: rgba(255,255,255,0.9); }
+        .aura-btn .emoji { font-size: 24px; flex-shrink: 0; }
+        .aura-btn .info h3 { font-size: 13px; font-weight: 600; }
+        .aura-btn .info p { font-size: 10px; color: #64748b; }
+        .aura-btn .check-mark { margin-left: auto; opacity: 0; font-size: 14px; }
         .aura-btn.selected .check-mark { opacity: 1; }
 
-        /* Home / Dashboard */
         .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
         .stat-card {
-            background: rgba(255,255,255,0.6);
-            border: 1px solid rgba(0,0,0,0.04);
-            border-radius: var(--radius-sm);
-            padding: 20px;
-            text-align: center;
+            background: rgba(255,255,255,0.6); border-radius: var(--radius-sm);
+            padding: 18px; text-align: center; border: 1px solid rgba(0,0,0,0.04);
         }
-        .stat-card .stat-icon { font-size: 32px; margin-bottom: 4px; }
-        .stat-card .stat-value { font-size: 24px; font-weight: 700; color: #0f172a; }
-        .stat-card .stat-label { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .stat-icon { font-size: 28px; }
+        .stat-card .stat-value { font-size: 22px; font-weight: 700; }
+        .stat-card .stat-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; }
 
-        .score-ring-wrap { display: flex; align-items: center; justify-content: center; margin: 16px 0; }
-        .score-ring { position: relative; width: 120px; height: 120px; }
-        .score-ring svg { transform: rotate(-90deg); width: 120px; height: 120px; }
+        .score-ring-wrap { display: flex; justify-content: center; margin: 16px 0; }
+        .score-ring { position: relative; width: 110px; height: 110px; }
+        .score-ring svg { transform: rotate(-90deg); width: 110px; height: 110px; }
         .score-ring .center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
-        .score-ring .center .num { font-size: 34px; font-weight: 700; color: #0f172a; }
-        .score-ring .center .label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.2px; }
+        .score-ring .center .num { font-size: 30px; font-weight: 700; }
+        .score-ring .center .label { font-size: 9px; color: #94a3b8; text-transform: uppercase; }
 
-        .tasks-label { font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 10px; display: flex; justify-content: space-between; }
         .task-item {
-            display: flex; align-items: center; padding: 12px 16px;
+            display: flex; align-items: center; padding: 10px 14px;
             background: #fff; border: 1px solid #f1f5f9; border-radius: 14px;
-            cursor: pointer; gap: 14px; margin-bottom: 8px; transition: all 0.25s;
+            cursor: pointer; gap: 12px; margin-bottom: 6px; transition: all 0.25s;
         }
-        .task-item:hover { border-color: #e2e8f0; background: #fafbfc; }
-        .task-item.done { opacity: 0.6; }
+        .task-item:hover { border-color: #e2e8f0; }
+        .task-item.done { opacity: 0.55; }
         .check-box {
-            width: 24px; height: 24px; border: 2px solid #cbd5e1; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; font-size: 14px;
-            flex-shrink: 0; background: #fff; transition: all 0.25s;
+            width: 22px; height: 22px; border: 2px solid #cbd5e1; border-radius: 7px;
+            display: flex; align-items: center; justify-content: center; font-size: 12px;
+            flex-shrink: 0; background: #fff;
         }
         .task-item.done .check-box { background: #0f172a; border-color: #0f172a; color: #fff; }
-        .task-text { font-size: 14px; flex: 1; color: #1e293b; }
+        .task-text { font-size: 13px; flex: 1; }
         .task-item.done .task-text { text-decoration: line-through; color: #94a3b8; }
 
-        .calendar-wrap { margin-top: 6px; padding: 18px 16px; background: rgba(255,255,255,0.5); border-radius: 18px; border: 1px solid rgba(0,0,0,0.04); }
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .cal-header h3 { font-size: 14px; font-weight: 600; color: #1e293b; }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .calendar-wrap { padding: 16px; background: rgba(255,255,255,0.5); border-radius: 18px; margin-top: 10px; }
+        .cal-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
         .cal-day {
             aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-            font-size: 11px; border-radius: 8px; background: rgba(0,0,0,0.02); color: #94a3b8;
+            font-size: 10px; border-radius: 7px; background: rgba(0,0,0,0.02); color: #94a3b8;
         }
-        .cal-day.weekday { font-size: 9px; text-transform: uppercase; background: transparent; font-weight: 500; }
+        .cal-day.weekday { font-size: 8px; text-transform: uppercase; background: transparent; }
         .cal-day.active { color: #fff; font-weight: 600; }
         .cal-day.today { border: 2px solid #0f172a; background: transparent; color: #0f172a; font-weight: 600; }
 
         .entry-card {
-            background: rgba(255,255,255,0.6);
-            border: 1px solid rgba(0,0,0,0.04);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 10px;
-            transition: all 0.25s;
+            background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 14px; padding: 14px; margin-bottom: 8px;
         }
-        .entry-card:hover { border-color: rgba(0,0,0,0.1); background: #fff; }
 
         textarea, input[type="text"], input[type="search"] {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 14px;
-            font-family: var(--font);
-            font-size: 14px;
-            outline: none;
-            background: rgba(255,255,255,0.5);
-            color: #0f172a;
-            resize: vertical;
+            width: 100%; padding: 10px 14px; border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 14px; font-family: var(--font); font-size: 14px;
+            outline: none; background: rgba(255,255,255,0.5); resize: vertical;
         }
         textarea:focus, input:focus { border-color: #0f172a; }
 
-        /* Chat */
+        /* CHAT STYLES */
         .chat-bubble {
-            padding: 10px 16px;
-            border-radius: 18px;
-            margin: 4px 0;
-            max-width: 80%;
-            font-size: 14px;
-            line-height: 1.4;
+            padding: 10px 14px; border-radius: 16px; margin: 4px 0;
+            max-width: 80%; font-size: 13px; line-height: 1.4; word-wrap: break-word;
         }
         .chat-sent { background: #0f172a; color: #fff; margin-left: auto; border-bottom-right-radius: 4px; }
         .chat-received { background: #f1f5f9; color: #1e293b; margin-right: auto; border-bottom-left-radius: 4px; }
+        .chat-username { font-weight: 600; font-size: 11px; margin-bottom: 2px; }
 
         .user-chip {
             display: flex; align-items: center; gap: 10px; padding: 10px 14px;
-            background: rgba(255,255,255,0.4); border: 1px solid rgba(0,0,0,0.04);
-            border-radius: 14px; cursor: pointer; margin-bottom: 6px; transition: all 0.25s;
+            background: rgba(255,255,255,0.4); border-radius: 14px; cursor: pointer;
+            margin-bottom: 5px; border: 1px solid transparent; transition: all 0.2s;
         }
         .user-chip:hover { background: rgba(255,255,255,0.7); }
         .user-chip.active { border-color: #0f172a; background: rgba(255,255,255,0.8); }
         .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; flex-shrink: 0; animation: pulse 2s infinite; }
         @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.5)} 50%{box-shadow:0 0 0 6px rgba(74,222,128,0)} }
-        .chat-messages { max-height: 350px; overflow-y: auto; padding: 4px 0; margin: 12px 0; }
 
-        /* Social Feed */
-        .post-card {
-            background: rgba(255,255,255,0.6);
-            border: 1px solid rgba(0,0,0,0.04);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
+        .chat-messages {
+            max-height: 380px; overflow-y: auto; padding: 8px 0; margin: 10px 0;
+            display: flex; flex-direction: column;
         }
-        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .post-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .post-actions { display: flex; gap: 16px; margin-top: 10px; }
-        .post-action { cursor: pointer; color: #94a3b8; font-size: 14px; transition: color 0.2s; }
-        .post-action:hover { color: #0f172a; }
+
+        .post-card {
+            background: rgba(255,255,255,0.6); border-radius: 14px;
+            padding: 14px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.04);
+        }
+        .post-avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .post-actions { display: flex; gap: 14px; margin-top: 8px; }
+        .post-action { cursor: pointer; color: #94a3b8; font-size: 13px; }
         .post-action.liked { color: #ef4444; }
 
-        .wp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+        .wp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
         .wp-thumb {
-            aspect-ratio: 16/10;
-            border-radius: 12px;
-            background-size: cover;
-            background-position: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            border: 2px solid transparent;
+            aspect-ratio: 16/10; border-radius: 10px; background-size: cover;
+            background-position: center; cursor: pointer; border: 2px solid transparent;
         }
-        .wp-thumb:hover { transform: scale(1.05); }
         .wp-thumb.selected { border-color: #0f172a; }
 
+        /* FIXED BOTTOM NAVIGATION */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255,255,255,0.88);
+            background: rgba(255,255,255,0.92);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 6px 2px;
-            padding-bottom: calc(6px + var(--safe-bottom));
+            padding: 8px 4px;
+            padding-bottom: calc(8px + var(--safe-bottom));
             z-index: 1000;
-            border-top: 1px solid rgba(0,0,0,0.06);
-            overflow-x: auto;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            gap: 2px;
         }
         @media (min-width: 600px) {
             .bottom-nav { max-width: 500px; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
         }
-        .nav-item {
+        .nav-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 2px;
             cursor: pointer;
             color: #64748b;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 500;
-            padding: 6px 8px;
+            padding: 8px 10px;
             border-radius: 12px;
             background: none;
             border: none;
             font-family: var(--font);
             white-space: nowrap;
-            transition: all 0.25s;
+            transition: all 0.2s;
             flex-shrink: 0;
+            min-width: 50px;
+            text-decoration: none;
         }
-        .nav-item:hover { color: #0f172a; }
-        .nav-item.active { color: #0f172a; background: rgba(0,0,0,0.04); font-weight: 600; }
-        .nav-icon { font-size: 17px; }
+        .nav-btn:hover { color: #0f172a; background: rgba(0,0,0,0.03); }
+        .nav-btn.active { color: #0f172a; background: rgba(0,0,0,0.06); font-weight: 600; }
+        .nav-btn .nav-icon { font-size: 20px; line-height: 1; }
+        .nav-btn .nav-label { line-height: 1; }
 
+        .signature {
+            position: fixed; bottom: 90px; right: 20px;
+            font-size: 12px; font-weight: 600; letter-spacing: 2px;
+            color: #0f172a; opacity: 0.2; z-index: 100; pointer-events: none;
+        }
         .wp-fab {
-            position: fixed;
-            bottom: 95px;
-            left: 20px;
-            z-index: 999;
-            background: rgba(15,23,42,0.9);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            color: #fff;
+            position: fixed; bottom: 90px; left: 20px; z-index: 999;
+            background: rgba(15,23,42,0.9); width: 38px; height: 38px;
+            border-radius: 50%; font-size: 16px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            border: none; color: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
         }
 
         .toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 14px;
-            pointer-events: none;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; padding: 12px 24px; border-radius: 25px;
+            font-weight: 600; font-size: 14px; pointer-events: none;
             animation: toastIn 0.4s ease, toastOut 0.4s ease 2s forwards;
-            background: #0f172a;
-            color: #fff;
+            background: #0f172a; color: #fff;
         }
         @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
         @keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateX(-50%) translateY(-20px); } }
 
-        .section-title { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
-        .badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 500;
-            background: rgba(0,0,0,0.04);
-            color: #64748b;
+        /* Username setup modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            z-index: 3000; display: flex; align-items: center; justify-content: center;
+        }
+        .modal {
+            background: #fff; border-radius: 20px; padding: 24px;
+            max-width: 360px; width: 90%; text-align: center;
         }
 
         @media (max-width: 480px) {
-            .container { padding: 22px 16px; border-radius: 24px; }
-            .landing-title { font-size: 34px; }
+            .container { padding: 20px 14px; border-radius: 24px; }
+            .landing-title { font-size: 32px; }
             .landing-icon { font-size: 56px; }
-            .score-ring { width: 100px; height: 100px; }
-            .score-ring svg { width: 100px; height: 100px; }
-            .score-ring .center .num { font-size: 28px; }
-            .signature { bottom: 85px; right: 14px; font-size: 11px; }
-            .wp-fab { bottom: 85px; left: 14px; }
-            .nav-item { padding: 4px 5px; font-size: 8px; }
-            .nav-icon { font-size: 15px; }
+            .score-ring { width: 90px; height: 90px; }
+            .score-ring svg { width: 90px; height: 90px; }
+            .score-ring .center .num { font-size: 26px; }
+            .nav-btn { padding: 6px 6px; font-size: 8px; min-width: 40px; }
+            .nav-btn .nav-icon { font-size: 17px; }
+            .signature { bottom: 85px; }
+            .wp-fab { bottom: 85px; }
         }
     </style>
 </head>
-<body id="body">
-
+<body>
     <div class="signature">id³</div>
-    <button class="wp-fab" onclick="App.showPage('wallpapers')" title="Wallpapers">🎨</button>
+    <button class="wp-fab" onclick="navigate('wallpapers')">🎨</button>
     <div id="toastContainer"></div>
 
-    <!-- ====== LANDING ====== -->
+    <!-- USERNAME MODAL -->
+    <div class="modal-overlay" id="usernameModal">
+        <div class="modal">
+            <h3 style="margin-bottom:12px;">👋 Welcome to Aura Builder</h3>
+            <p style="color:#64748b;font-size:14px;margin-bottom:16px;">Choose a username for the chat</p>
+            <input type="text" id="usernameInput" placeholder="Your username..." style="margin-bottom:12px;">
+            <button class="btn-primary" onclick="setUsername()">Join Chat</button>
+        </div>
+    </div>
+
+    <!-- LANDING -->
     <div class="page active" id="page-landing">
         <div class="container landing-content">
             <span class="landing-icon">⚡</span>
             <h1 class="landing-title">Aura Builder</h1>
             <p class="landing-subtitle">Shape your presence. Manifest your energy.</p>
-            <button class="btn-primary" onclick="App.showPage('select')">✦ Initiate ✦</button>
+            <button class="btn-primary" onclick="navigate('select')">✦ Initiate ✦</button>
         </div>
     </div>
 
-    <!-- ====== SELECT AURAS ====== -->
+    <!-- SELECT AURAS -->
     <div class="page" id="page-select">
         <div class="container">
-            <div style="margin-bottom:16px;">
-                <h2 style="font-size:22px;font-weight:700;color:#0f172a;">Choose Your Auras</h2>
-                <p style="color:#64748b;font-size:13px;">Select up to 3 energies to cultivate</p>
-            </div>
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">Choose Your Auras</h2>
+            <p style="color:#64748b;font-size:13px;margin-bottom:12px;">Select up to 3 energies</p>
             <div class="counter-chip"><span>✧</span> <strong id="counter">0</strong><span>/3 selected</span></div>
             <div class="aura-grid" id="auraGrid"></div>
-            <button class="btn-primary" onclick="App.confirmAuras()">Continue to Dashboard</button>
-            <button class="btn-secondary" onclick="App.showPage('landing')">← Back</button>
+            <button class="btn-primary" onclick="confirmSelection()" style="margin-top:12px;">Continue →</button>
+            <button class="btn-secondary" onclick="navigate('landing')">← Back</button>
         </div>
     </div>
 
-    <!-- ====== HOME / DASHBOARD ====== -->
+    <!-- HOME -->
     <div class="page" id="page-home">
         <div class="container">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <h2 id="homeTitle" style="font-size:20px;font-weight:700;color:#0f172a;">Your Dashboard</h2>
-                <span id="homeBadge" class="badge">⚡ active</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <h2 id="homeTitle" style="font-size:18px;font-weight:700;">Dashboard</h2>
+                <span id="homeBadge" style="font-size:11px;background:rgba(0,0,0,0.04);padding:4px 12px;border-radius:20px;">⚡ active</span>
             </div>
-
             <div class="score-ring-wrap">
                 <div class="score-ring">
-                    <svg viewBox="0 0 120 120">
-                        <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="6"/>
-                        <circle id="scoreRing" cx="60" cy="60" r="52" fill="none" stroke="#0f172a" stroke-width="6" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+                    <svg viewBox="0 0 110 110">
+                        <circle cx="55" cy="55" r="47" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="5"/>
+                        <circle id="scoreRing" cx="55" cy="55" r="47" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" stroke-dasharray="295.31" stroke-dashoffset="295.31"/>
                     </svg>
-                    <div class="center"><div class="num" id="score">0%</div><div class="label">Aura Strength</div></div>
+                    <div class="center"><div class="num" id="score">0%</div><div class="label">Strength</div></div>
                 </div>
             </div>
-
             <div class="stat-row">
-                <div class="stat-card">
-                    <div class="stat-icon">🔥</div>
-                    <div class="stat-value" id="streakCount">0</div>
-                    <div class="stat-label">Day Streak</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-value" id="tasksDone">0</div>
-                    <div class="stat-label">Tasks Done</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📖</div>
-                    <div class="stat-value" id="diaryCount">0</div>
-                    <div class="stat-label">Diary Entries</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💬</div>
-                    <div class="stat-value" id="msgCount">0</div>
-                    <div class="stat-label">Messages</div>
-                </div>
+                <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-value" id="streakCount">0</div><div class="stat-label">Streak</div></div>
+                <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-value" id="tasksDone">0</div><div class="stat-label">Tasks</div></div>
+                <div class="stat-card"><div class="stat-icon">📖</div><div class="stat-value" id="diaryCount">0</div><div class="stat-label">Diary</div></div>
+                <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-value" id="msgCount">0</div><div class="stat-label">Chats</div></div>
             </div>
-
-            <div class="tasks-label"><span>🎯 Today's Practice</span><span id="taskProgress" style="color:#94a3b8;">0/0 done</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:#475569;margin-bottom:8px;">
+                <span>Today's Practice</span><span id="taskProgress" style="color:#94a3b8;">0/0</span>
+            </div>
             <div id="tasks"></div>
-
             <div class="calendar-wrap">
-                <div class="cal-header"><h3>📅 Streak Calendar</h3><span id="monthLabel" style="font-size:13px;color:#94a3b8;">—</span></div>
+                <div class="cal-header"><strong>📅 Calendar</strong><span id="monthLabel" style="font-size:12px;color:#94a3b8;">—</span></div>
                 <div class="cal-grid" id="calendar"></div>
             </div>
-
-            <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
-                <button class="btn-sm" onclick="App.resetDay()">↺ Reset Today</button>
-                <button class="btn-sm" onclick="App.showPage('select')">✧ Change Auras</button>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="btn-sm" onclick="resetDay()">↺ Reset</button>
+                <button class="btn-sm" onclick="navigate('select')">✧ Auras</button>
             </div>
         </div>
     </div>
 
-    <!-- ====== DIARY ====== -->
+    <!-- DIARY -->
     <div class="page" id="page-diary">
         <div class="container">
-            <h2 class="section-title">📖 Personal Diary</h2>
-            <div style="margin-bottom:16px;">
-                <textarea id="diaryInput" rows="4" placeholder="Dear diary... what's on your mind today?"></textarea>
-                <div style="display:flex;gap:8px;margin-top:8px;">
-                    <input type="text" id="diaryMood" placeholder="Mood (e.g. 😊 Great)" style="flex:1;">
-                    <button class="btn-sm btn-primary" onclick="App.saveDiary()" style="width:auto;">💾 Save</button>
-                </div>
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:12px;">📖 Personal Diary</h2>
+            <textarea id="diaryInput" rows="3" placeholder="Dear diary..."></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+                <input type="text" id="diaryMood" placeholder="Mood" style="flex:1;">
+                <button class="btn-sm btn-primary" onclick="saveDiary()" style="width:auto;">💾 Save</button>
             </div>
-            <input type="search" id="diarySearch" placeholder="🔍 Search entries..." oninput="App.renderDiary()">
-            <div id="diaryEntries" style="max-height:400px;overflow-y:auto;margin-top:12px;">
-                <p style="color:#94a3b8;text-align:center;">No entries yet. Start writing!</p>
+            <input type="search" id="diarySearch" placeholder="🔍 Search..." oninput="renderDiary()" style="margin-top:10px;">
+            <div id="diaryEntries" style="max-height:350px;overflow-y:auto;margin-top:10px;">
+                <p style="color:#94a3b8;text-align:center;">No entries yet.</p>
             </div>
         </div>
     </div>
 
-    <!-- ====== ROUTINE NOTES ====== -->
+    <!-- ROUTINE -->
     <div class="page" id="page-routine">
         <div class="container">
-            <h2 class="section-title">📋 Routine Notes</h2>
-            <div style="margin-bottom:16px;">
-                <input type="text" id="routineTitle" placeholder="Routine title...">
-                <textarea id="routineInput" rows="3" placeholder="Describe your routine..." style="margin-top:8px;"></textarea>
-                <button class="btn-sm btn-primary" onclick="App.saveRoutine()" style="margin-top:8px;width:100%;">💾 Save Routine</button>
-            </div>
-            <div id="routineEntries" style="max-height:400px;overflow-y:auto;">
-                <p style="color:#94a3b8;text-align:center;">No routines saved yet.</p>
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:12px;">📋 Routine Notes</h2>
+            <input type="text" id="routineTitle" placeholder="Title...">
+            <textarea id="routineInput" rows="3" placeholder="Description..." style="margin-top:8px;"></textarea>
+            <button class="btn-sm btn-primary" onclick="saveRoutine()" style="margin-top:8px;width:100%;">💾 Save</button>
+            <div id="routineEntries" style="max-height:350px;overflow-y:auto;margin-top:10px;">
+                <p style="color:#94a3b8;text-align:center;">No routines yet.</p>
             </div>
         </div>
     </div>
 
-    <!-- ====== CHAT ====== -->
+    <!-- CHAT -->
     <div class="page" id="page-chat">
         <div class="container">
-            <h2 class="section-title">💬 Messages</h2>
-            <p style="font-size:12px;font-weight:600;color:#475569;margin-bottom:8px;">🟢 Online Now</p>
-            <div id="onlineUsers"></div>
-            <hr style="border-color:rgba(0,0,0,0.06);margin:14px 0;">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                <span style="font-size:14px;font-weight:600;">Chat with</span>
-                <strong id="chatPartner" style="color:#0f172a;">—</strong>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <h2 style="font-size:20px;font-weight:700;">💬 Global Chat</h2>
+                <span style="font-size:12px;color:#4ade80;">● <span id="onlineCount">0</span> online</span>
             </div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <div style="display:flex;gap:8px;margin-top:8px;">
-                <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')App.sendMessage()">
-                <button class="btn-sm btn-primary" onclick="App.sendMessage()" style="width:auto;flex-shrink:0;">📤 Send</button>
+            <div style="font-size:12px;color:#64748b;margin-bottom:8px;">
+                Chatting as: <strong id="myUsername">—</strong>
+                <button class="btn-sm" onclick="changeUsername()" style="margin-left:8px;">✏️ Change</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <p style="color:#94a3b8;text-align:center;">Loading messages...</p>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendMessage()">
+                <button class="btn-sm btn-primary" onclick="sendMessage()" style="width:auto;flex-shrink:0;">📤</button>
             </div>
         </div>
     </div>
 
-    <!-- ====== SOCIAL FEED ====== -->
+    <!-- SOCIAL -->
     <div class="page" id="page-social">
         <div class="container">
-            <h2 class="section-title">🌐 Social Feed</h2>
-            <div style="margin-bottom:14px;">
-                <textarea id="postInput" rows="2" placeholder="Share your aura progress..."></textarea>
-                <button class="btn-sm btn-primary" onclick="App.createPost()" style="margin-top:6px;width:100%;">📝 Post Update</button>
-            </div>
-            <div id="socialFeed" style="max-height:450px;overflow-y:auto;">
-                <p style="color:#94a3b8;text-align:center;">No posts yet. Share your first update!</p>
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;">🌐 Social Feed</h2>
+            <textarea id="postInput" rows="2" placeholder="Share your progress..."></textarea>
+            <button class="btn-sm btn-primary" onclick="createPost()" style="margin-top:6px;width:100%;">📝 Post</button>
+            <div id="socialFeed" style="max-height:350px;overflow-y:auto;margin-top:10px;">
+                <p style="color:#94a3b8;text-align:center;">No posts yet.</p>
             </div>
         </div>
     </div>
 
-    <!-- ====== WALLPAPERS ====== -->
+    <!-- WALLPAPERS -->
     <div class="page" id="page-wallpapers">
         <div class="container">
-            <h2 class="section-title">🎨 Wallpapers</h2>
-            <button class="btn-sm" onclick="App.randomWallpaper()" style="width:100%;margin-bottom:12px;">🎲 Random Wallpaper</button>
-            <p style="font-size:12px;color:#94a3b8;" id="wpCount">40+ wallpapers</p>
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;">🎨 Wallpapers</h2>
+            <button class="btn-sm" onclick="randomWallpaper()" style="width:100%;margin-bottom:10px;">🎲 Random</button>
+            <p style="font-size:11px;color:#94a3b8;" id="wpCount">30+ wallpapers</p>
             <div class="wp-grid" id="wpGrid"></div>
         </div>
     </div>
 
-    <!-- ====== BOTTOM NAV ====== -->
+    <!-- FIXED BOTTOM NAVIGATION -->
     <nav class="bottom-nav" id="bottomNav" style="display:none;">
-        <button class="nav-item active" data-page="home"><span class="nav-icon">🏠</span>Home</button>
-        <button class="nav-item" data-page="diary"><span class="nav-icon">📖</span>Diary</button>
-        <button class="nav-item" data-page="routine"><span class="nav-icon">📋</span>Routine</button>
-        <button class="nav-item" data-page="chat"><span class="nav-icon">💬</span>Chat</button>
-        <button class="nav-item" data-page="social"><span class="nav-icon">🌐</span>Social</button>
-        <button class="nav-item" data-page="wallpapers"><span class="nav-icon">🎨</span>Walls</button>
+        <button class="nav-btn active" data-page="home" onclick="navigate('home')">
+            <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" data-page="diary" onclick="navigate('diary')">
+            <span class="nav-icon">📖</span><span class="nav-label">Diary</span>
+        </button>
+        <button class="nav-btn" data-page="routine" onclick="navigate('routine')">
+            <span class="nav-icon">📋</span><span class="nav-label">Routine</span>
+        </button>
+        <button class="nav-btn" data-page="chat" onclick="navigate('chat')">
+            <span class="nav-icon">💬</span><span class="nav-label">Chat</span>
+        </button>
+        <button class="nav-btn" data-page="social" onclick="navigate('social')">
+            <span class="nav-icon">🌐</span><span class="nav-label">Social</span>
+        </button>
+        <button class="nav-btn" data-page="wallpapers" onclick="navigate('wallpapers')">
+            <span class="nav-icon">🎨</span><span class="nav-label">Walls</span>
+        </button>
     </nav>
 
     <script>
-    (function() {
-        // ============================================================
-        //  15 AURAS
-        // ============================================================
-        const AURAS = {
-            focus: { name:'Focus', emoji:'🎯', accent:'#ff6b6b', desc:'Laser-sharp concentration', tasks:['Deep work — 25 min','No phone for 1 hour','Single-task one project','Clear desk completely','Use Pomodoro timer'] },
-            creativity: { name:'Creativity', emoji:'🎨', accent:'#f06595', desc:'Unleash imagination', tasks:['Free-write for 10 min','Sketch or doodle','Brainstorm 10 ideas','Listen to new music','Rearrange your space'] },
-            discipline: { name:'Discipline', emoji:'🧘', accent:'#748ffc', desc:'Consistent self-control', tasks:['Wake up at set time','Follow morning routine','Say no to one distraction','Complete priority task','Evening reflection'] },
-            vitality: { name:'Vitality', emoji:'⚡', accent:'#ffd43b', desc:'Radiant physical energy', tasks:['30 min exercise','Drink 8 glasses water','Eat whole foods meal','5 min cold shower','Stretch for 10 min'] },
-            empathy: { name:'Empathy', emoji:'🤝', accent:'#ff8787', desc:'Deep emotional connection', tasks:['Listen without interrupting','Ask how someone feels','Validate emotions','Practice active listening','Give genuine compliment'] },
-            resilience: { name:'Resilience', emoji:'🛡️', accent:'#20c997', desc:'Bounce back stronger', tasks:['Reframe a setback','Practice gratitude','Do something hard','Journal about challenge','Take a mental break'] },
-            clarity: { name:'Clarity', emoji:'🔮', accent:'#b197fc', desc:'Clear mind & vision', tasks:['Morning meditation','Write top 3 priorities','Declutter one area','Digital detox 1 hour','Review weekly goals'] },
-            charisma: { name:'Charisma', emoji:'✨', accent:'#f783ac', desc:'Magnetic presence', tasks:['Smile at 3 strangers','Tell a story','Maintain eye contact','Use open body language','Make someone laugh'] },
-            courage: { name:'Courage', emoji:'🦁', accent:'#ff922b', desc:'Face fears boldly', tasks:['Do one scary thing','Speak up in meeting','Try new experience','Admit a mistake','Stand up for yourself'] },
-            patience: { name:'Patience', emoji:'⏳', accent:'#a9e34b', desc:'Steady & calm', tasks:['Wait before reacting','Let others go first','Practice deep breathing','Accept delays calmly','Count to 10 before responding'] },
-            gratitude: { name:'Gratitude', emoji:'🙏', accent:'#e599f7', desc:'Appreciate the present', tasks:['Write 3 gratitudes','Thank someone sincerely','Notice small joys','Appreciate nature','Reflect on blessings'] },
-            ambition: { name:'Ambition', emoji:'🚀', accent:'#f03e3e', desc:'Drive to achieve', tasks:['Set 1 bold goal','Take one big action','Network with someone','Learn new skill 30 min','Visualize success'] },
-            mindfulness: { name:'Mindfulness', emoji:'🧘‍♀️', accent:'#63e6be', desc:'Live in the now', tasks:['5 min body scan','Eat without distraction','Notice 5 senses','Walk mindfully','Observe thoughts'] },
-            leadership: { name:'Leadership', emoji:'👑', accent:'#f59e0b', desc:'Inspire & guide', tasks:['Delegate one task','Give clear direction','Recognize others work','Make a decision','Lead by example'] },
-            adventure: { name:'Adventure', emoji:'🏔️', accent:'#3b82f6', desc:'Embrace the unknown', tasks:['Explore new place','Try new food','Say yes to opportunity','Break one routine','Plan an adventure'] }
-        };
+    // ============================================================
+    //  DATA
+    // ============================================================
+    const AURAS = {
+        focus: { name:'Focus', emoji:'🎯', accent:'#ff6b6b', desc:'Concentration', tasks:['Deep work 25 min','No phone 1 hour','Single-task','Clear desk','Pomodoro'] },
+        creativity: { name:'Creativity', emoji:'🎨', accent:'#f06595', desc:'Imagination', tasks:['Free-write 10 min','Sketch/doodle','Brainstorm ideas','New music','Rearrange space'] },
+        discipline: { name:'Discipline', emoji:'🧘', accent:'#748ffc', desc:'Self-control', tasks:['Wake up on time','Morning routine','Say no to distraction','Priority task','Evening reflection'] },
+        vitality: { name:'Vitality', emoji:'⚡', accent:'#ffd43b', desc:'Energy', tasks:['Exercise 30 min','8 glasses water','Whole foods meal','Cold shower','Stretch 10 min'] },
+        empathy: { name:'Empathy', emoji:'🤝', accent:'#ff8787', desc:'Connection', tasks:['Listen fully','Ask feelings','Validate emotions','Active listening','Compliment someone'] },
+        resilience: { name:'Resilience', emoji:'🛡️', accent:'#20c997', desc:'Bounce back', tasks:['Reframe setback','Practice gratitude','Do hard thing','Journal challenge','Mental break'] },
+        clarity: { name:'Clarity', emoji:'🔮', accent:'#b197fc', desc:'Clear mind', tasks:['Meditate','Top 3 priorities','Declutter','Digital detox','Review goals'] },
+        charisma: { name:'Charisma', emoji:'✨', accent:'#f783ac', desc:'Presence', tasks:['Smile at strangers','Tell story','Eye contact','Open posture','Make someone laugh'] },
+        courage: { name:'Courage', emoji:'🦁', accent:'#ff922b', desc:'Face fears', tasks:['Do scary thing','Speak up','Try new thing','Admit mistake','Stand up'] },
+        patience: { name:'Patience', emoji:'⏳', accent:'#a9e34b', desc:'Steady', tasks:['Wait to react','Let others first','Deep breathing','Accept delays','Count to 10'] },
+        gratitude: { name:'Gratitude', emoji:'🙏', accent:'#e599f7', desc:'Appreciate', tasks:['3 gratitudes','Thank someone','Notice joys','Appreciate nature','Reflect'] },
+        ambition: { name:'Ambition', emoji:'🚀', accent:'#f03e3e', desc:'Drive', tasks:['Set bold goal','Take action','Network','Learn skill','Visualize'] },
+        mindfulness: { name:'Mindfulness', emoji:'🧘‍♀️', accent:'#63e6be', desc:'Present', tasks:['Body scan','Eat mindfully','5 senses','Mindful walk','Observe thoughts'] },
+        leadership: { name:'Leadership', emoji:'👑', accent:'#f59e0b', desc:'Inspire', tasks:['Delegate','Give direction','Recognize others','Make decision','Lead'] },
+        adventure: { name:'Adventure', emoji:'🏔️', accent:'#3b82f6', desc:'Explore', tasks:['New place','New food','Say yes','Break routine','Plan adventure'] }
+    };
 
-        const UNSPLASH = [
-            'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920&q=80',
-            'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=1920&q=80',
-            'https://images.unsplash.com/photo-1557682260-96773eb01377?w=1920&q=80',
-            'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&q=80',
-            'https://images.unsplash.com/photo-1558470598-a5dda9640f68?w=1920&q=80',
-            'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&q=80',
-            'https://images.unsplash.com/photo-1579546929662-711aa81148cf?w=1920&q=80',
-            'https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=1920&q=80',
-            'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1920&q=80',
-            'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1920&q=80',
-            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
-            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80',
-            'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80',
-            'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80',
-            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80',
-            'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80',
-            'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=80',
-            'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=1920&q=80',
-            'https://images.unsplash.com/photo-1518655048521-f130df041f66?w=1920&q=80',
-            'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=1920&q=80',
-            'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80',
-            'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1920&q=80',
-            'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1920&q=80',
-            'https://images.unsplash.com/photo-1485988412941-77a35537dae4?w=1920&q=80',
-            'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=1920&q=80',
-            'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=1920&q=80',
-            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80',
-            'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1920&q=80',
-            'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1920&q=80',
-            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80',
-            'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=1920&q=80',
-            'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=1920&q=80',
-            'https://images.unsplash.com/photo-1515630278258-407f66498911?w=1920&q=80',
-            'https://images.unsplash.com/photo-1491466424936-e304919aada7?w=1920&q=80',
-            'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1920&q=80',
-            'https://images.unsplash.com/photo-1516796181076-3a4e8a7e00d7?w=1920&q=80',
-            'https://images.unsplash.com/photo-1502139214982-d0ad755818d8?w=1920&q=80',
-            'https://images.unsplash.com/photo-1506891536236-3e07892564b7?w=1920&q=80',
-            'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1920&q=80',
-            'https://images.unsplash.com/photo-1491895200222-0fc4a4c35e18?w=1920&q=80',
-        ];
+    const UNSPLASH = [
+        'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920&q=80',
+        'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=1920&q=80',
+        'https://images.unsplash.com/photo-1557682260-96773eb01377?w=1920&q=80',
+        'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&q=80',
+        'https://images.unsplash.com/photo-1558470598-a5dda9640f68?w=1920&q=80',
+        'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&q=80',
+        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
+        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80',
+        'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80',
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80',
+        'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80',
+        'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=80',
+        'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=1920&q=80',
+        'https://images.unsplash.com/photo-1518655048521-f130df041f66?w=1920&q=80',
+        'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80',
+        'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1920&q=80',
+        'https://images.unsplash.com/photo-1485988412941-77a35537dae4?w=1920&q=80',
+        'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=1920&q=80',
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80',
+        'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1920&q=80',
+        'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1920&q=80',
+        'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=1920&q=80',
+        'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=1920&q=80',
+        'https://images.unsplash.com/photo-1515630278258-407f66498911?w=1920&q=80',
+        'https://images.unsplash.com/photo-1491466424936-e304919aada7?w=1920&q=80',
+        'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1920&q=80',
+        'https://images.unsplash.com/photo-1516796181076-3a4e8a7e00d7?w=1920&q=80',
+        'https://images.unsplash.com/photo-1502139214982-d0ad755818d8?w=1920&q=80',
+        'https://images.unsplash.com/photo-1506891536236-3e07892564b7?w=1920&q=80',
+        'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1920&q=80',
+    ];
 
-        const ONLINE_USERS = [
-            { name:'Edwin', avatar:'🦾', bio:'Creator · Online' },
-            { name:'Alex', avatar:'🧑‍💻', bio:'Focus master · Online' },
-            { name:'Maya', avatar:'👩‍🎨', bio:'Creative spirit · Online' },
-            { name:'Zane', avatar:'🦸', bio:'Courage warrior · Online' },
-            { name:'Luna', avatar:'🌙', bio:'Mystic guide · Online' },
-            { name:'Rex', avatar:'🐕', bio:'Adventure seeker · Online' },
-        ];
+    // ============================================================
+    //  STATE
+    // ============================================================
+    function loadState() {
+        try {
+            const s = JSON.parse(localStorage.getItem('ab_v7') || '{}');
+            return {
+                selectedAuras: s.selectedAuras || [],
+                completedTasks: s.completedTasks || [],
+                streakData: s.streakData || {},
+                wallpaper: s.wallpaper || UNSPLASH[0],
+                diary: s.diary || [],
+                routines: s.routines || [],
+                socialPosts: s.socialPosts || [],
+                likedPosts: s.likedPosts || [],
+                username: s.username || '',
+            };
+        } catch(e) {
+            return { selectedAuras:[], completedTasks:[], streakData:{}, wallpaper:UNSPLASH[0], diary:[], routines:[], socialPosts:[], likedPosts:[], username:'' };
+        }
+    }
 
-        // ============================================================
-        //  STATE — NO SAMPLE DATA
-        // ============================================================
-        function loadState() {
-            try {
-                const s = JSON.parse(localStorage.getItem('auraBuilder_v4') || '{}');
-                return {
-                    selectedAuras: s.selectedAuras || [],
-                    completedTasks: s.completedTasks || [],
-                    streakData: s.streakData || {},
-                    wallpaper: s.wallpaper || UNSPLASH[0],
-                    chatMessages: s.chatMessages || [],
-                    chatUser: s.chatUser || 'Edwin',
-                    diary: s.diary || [],
-                    routines: s.routines || [],
-                    socialPosts: s.socialPosts || [],
-                    likedPosts: s.likedPosts || [],
-                };
-            } catch(e) {
-                return {
-                    selectedAuras:[], completedTasks:[], streakData:{},
-                    wallpaper:UNSPLASH[0], chatMessages:[], chatUser:'Edwin',
-                    diary:[], routines:[], socialPosts:[], likedPosts:[]
-                };
+    // Chat messages use a SEPARATE key for cross-device sharing
+    function loadChatMessages() {
+        try {
+            return JSON.parse(localStorage.getItem('ab_chat_messages') || '[]');
+        } catch(e) { return []; }
+    }
+    function saveChatMessages(msgs) {
+        localStorage.setItem('ab_chat_messages', JSON.stringify(msgs));
+    }
+
+    // Online users tracking
+    function updateOnlineStatus() {
+        const users = JSON.parse(localStorage.getItem('ab_online_users') || '{}');
+        users[S.username] = Date.now();
+        // Remove users inactive for more than 30 seconds
+        const now = Date.now();
+        for (const [name, time] of Object.entries(users)) {
+            if (now - time > 30000) delete users[name];
+        }
+        localStorage.setItem('ab_online_users', JSON.stringify(users));
+        return Object.keys(users).length;
+    }
+
+    let S = loadState();
+    let chatMessages = loadChatMessages();
+    let chatPollInterval = null;
+
+    function save() { 
+        localStorage.setItem('ab_v7', JSON.stringify(S)); 
+    }
+
+    function toast(msg) {
+        const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+        document.getElementById('toastContainer').appendChild(t);
+        setTimeout(() => t.remove(), 2400);
+    }
+
+    function setBg(url) {
+        const style = document.createElement('style');
+        style.textContent = `body::before{background-image:url('${url}')!important}`;
+        const old = document.querySelector('style[data-bg]');
+        if(old) old.remove();
+        style.setAttribute('data-bg', '');
+        document.head.appendChild(style);
+    }
+
+    function getTasks() {
+        let t = [];
+        S.selectedAuras.forEach(k => { if(AURAS[k]) t = t.concat(AURAS[k].tasks); });
+        return [...new Set(t)].slice(0,8);
+    }
+
+    function calcScore() {
+        const tasks = getTasks();
+        const total = tasks.length;
+        const done = S.completedTasks.filter(i => i < total).length;
+        return { pct: total>0?Math.round((done/total)*100):0, done, total };
+    }
+
+    function calcStreak() {
+        let streak = 0;
+        const today = new Date();
+        for(let i=0; i<365; i++) {
+            const d = new Date(today); d.setDate(d.getDate()-i);
+            if(S.streakData[d.toDateString()]) streak++; else break;
+        }
+        return streak;
+    }
+
+    // ============================================================
+    //  USERNAME MANAGEMENT
+    // ============================================================
+    function setUsername() {
+        const input = document.getElementById('usernameInput');
+        const name = input.value.trim();
+        if(!name) { toast('Enter a username'); return; }
+        S.username = name;
+        save();
+        document.getElementById('usernameModal').style.display = 'none';
+        document.getElementById('myUsername').textContent = name;
+        updateOnlineStatus();
+        if(document.getElementById('page-chat').classList.contains('active')) {
+            renderChat();
+        }
+        toast('👋 Welcome, ' + name + '!');
+    }
+
+    function changeUsername() {
+        document.getElementById('usernameModal').style.display = 'flex';
+        document.getElementById('usernameInput').value = S.username;
+    }
+
+    // ============================================================
+    //  NAVIGATION
+    // ============================================================
+    function navigate(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+
+        // Update bottom nav
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        const navBtn = document.querySelector(`.nav-btn[data-page="${page}"]`);
+        if(navBtn) navBtn.classList.add('active');
+
+        // Show/hide bottom nav
+        const bottomNav = document.getElementById('bottomNav');
+        if(page === 'landing' || page === 'select') {
+            bottomNav.style.display = 'none';
+        } else {
+            bottomNav.style.display = 'flex';
+        }
+
+        if(page === 'select') renderAuraGrid();
+        if(page === 'home') renderHome();
+        if(page === 'diary') renderDiary();
+        if(page === 'routine') renderRoutines();
+        if(page === 'chat') {
+            if(!S.username) {
+                document.getElementById('usernameModal').style.display = 'flex';
             }
+            renderChat();
+            startChatPolling();
+        } else {
+            stopChatPolling();
+        }
+        if(page === 'social') renderSocial();
+        if(page === 'wallpapers') renderWallpapers();
+
+        window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    // ============================================================
+    //  AURA SELECTION
+    // ============================================================
+    function toggleAura(key) {
+        const idx = S.selectedAuras.indexOf(key);
+        if(idx > -1) S.selectedAuras.splice(idx, 1);
+        else if(S.selectedAuras.length < 3) S.selectedAuras.push(key);
+        save(); renderAuraGrid();
+    }
+
+    function renderAuraGrid() {
+        const grid = document.getElementById('auraGrid');
+        if(!grid) return;
+        grid.innerHTML = Object.entries(AURAS).map(([key, a]) => {
+            const sel = S.selectedAuras.includes(key);
+            return `<div class="aura-btn${sel?' selected':''}" onclick="toggleAura('${key}')">
+                <span class="emoji">${a.emoji}</span><div class="info"><h3>${a.name}</h3><p>${a.desc}</p></div>
+                <span class="check-mark">✓</span></div>`;
+        }).join('');
+        document.getElementById('counter').textContent = S.selectedAuras.length;
+    }
+
+    function confirmSelection() {
+        if(S.selectedAuras.length === 0) { toast('Select at least one aura'); return; }
+        save(); navigate('home');
+    }
+
+    // ============================================================
+    //  HOME
+    // ============================================================
+    function toggleTask(i) {
+        const idx = S.completedTasks.indexOf(i);
+        if(idx > -1) S.completedTasks.splice(idx, 1);
+        else S.completedTasks.push(i);
+        const tasks = getTasks(); const total = tasks.length;
+        const done = S.completedTasks.filter(x => x < total).length;
+        const today = new Date().toDateString();
+        if(done === total && total > 0) S.streakData[today] = true;
+        else delete S.streakData[today];
+        save(); renderHome();
+    }
+
+    function resetDay() {
+        if(!confirm('Reset all tasks?')) return;
+        S.completedTasks = [];
+        delete S.streakData[new Date().toDateString()];
+        save(); renderHome();
+    }
+
+    function renderHome() {
+        if(S.selectedAuras.length === 0) { navigate('select'); return; }
+        const primary = AURAS[S.selectedAuras[0]];
+        const tasks = getTasks();
+        const { pct, done, total } = calcScore();
+        const streak = calcStreak();
+        const circ = 2*Math.PI*47;
+        const offset = circ - (pct/100)*circ;
+
+        document.getElementById('homeTitle').textContent = S.selectedAuras.map(k => AURAS[k].emoji+' '+AURAS[k].name).join(' + ');
+        document.getElementById('homeBadge').textContent = '⚡ '+S.selectedAuras.map(k=>AURAS[k].emoji).join(' ');
+        document.getElementById('score').textContent = pct+'%';
+        document.getElementById('taskProgress').textContent = done+'/'+total;
+        document.getElementById('streakCount').textContent = streak;
+        document.getElementById('tasksDone').textContent = S.completedTasks.length;
+        document.getElementById('diaryCount').textContent = S.diary.length;
+        document.getElementById('msgCount').textContent = chatMessages.filter(m=>m.username===S.username).length;
+
+        const ring = document.getElementById('scoreRing');
+        ring.style.strokeDashoffset = offset;
+        ring.style.stroke = primary.accent;
+
+        document.getElementById('tasks').innerHTML = tasks.map((task, i) => {
+            const comp = S.completedTasks.includes(i);
+            return `<div class="task-item${comp?' done':''}" onclick="toggleTask(${i})">
+                <div class="check-box">${comp?'✓':''}</div><span class="task-text">${task}</span></div>`;
+        }).join('');
+
+        renderCalendar();
+    }
+
+    function renderCalendar() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const daysInMonth = new Date(year, month+1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+
+        document.getElementById('monthLabel').textContent = now.toLocaleDateString('en',{month:'long',year:'numeric'});
+        const cal = document.getElementById('calendar');
+        cal.innerHTML = '';
+
+        ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
+            const div = document.createElement('div');
+            div.className = 'cal-day weekday'; div.textContent = d;
+            cal.appendChild(div);
+        });
+
+        for(let i=0; i<firstDay; i++) {
+            const div = document.createElement('div');
+            div.className = 'cal-day';
+            div.style.background = 'transparent';
+            cal.appendChild(div);
         }
 
-        let state = loadState();
-
-        function saveState() { localStorage.setItem('auraBuilder_v4', JSON.stringify(state)); }
-        function toast(msg) {
-            const t = document.createElement('div');
-            t.className = 'toast';
-            t.textContent = msg;
-            document.getElementById('toastContainer').appendChild(t);
-            setTimeout(() => t.remove(), 2400);
-        }
-        function setBackground(url) {
-            const s = document.createElement('style');
-            s.id = 'dyn-bg';
-            s.textContent = `body::before{background-image:url('${url}')!important}`;
-            const old = document.getElementById('dyn-bg');
-            if(old) old.remove();
-            document.head.appendChild(s);
-        }
-        function getTasks() {
-            let tasks = [];
-            state.selectedAuras.forEach(k => { if(AURAS[k]) tasks = tasks.concat(AURAS[k].tasks); });
-            return [...new Set(tasks)].slice(0,8);
-        }
-        function calcScore() {
-            const tasks = getTasks();
-            const total = tasks.length;
-            const done = state.completedTasks.filter(i => i < total).length;
-            return { pct: total>0?Math.round((done/total)*100):0, done, total };
-        }
-        function calcStreak() {
-            let streak = 0;
-            const today = new Date();
-            for (let i = 0; i < 365; i++) {
-                const d = new Date(today);
-                d.setDate(d.getDate() - i);
-                if (state.streakData[d.toDateString()]) streak++;
-                else break;
+        for(let d=1; d<=daysInMonth; d++) {
+            const ds = new Date(year, month, d).toDateString();
+            const div = document.createElement('div');
+            div.className = 'cal-day'; div.textContent = d;
+            if(S.streakData[ds]) {
+                div.classList.add('active');
+                if(S.selectedAuras.length) div.style.background = AURAS[S.selectedAuras[0]].accent;
             }
-            return streak;
-        }
-
-        // ============================================================
-        //  NAVIGATION
-        // ============================================================
-        function showPage(name) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const page = document.getElementById('page-' + name);
-            if(page) page.classList.add('active');
-
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelectorAll(`.nav-item[data-page="${name}"]`).forEach(n => n.classList.add('active'));
-
-            const bottomNav = document.getElementById('bottomNav');
-            bottomNav.style.display = (name === 'landing' || name === 'select') ? 'none' : 'flex';
-
-            if(name === 'select') renderAuraGrid();
-            if(name === 'home') renderHome();
-            if(name === 'diary') renderDiary();
-            if(name === 'routine') renderRoutines();
-            if(name === 'chat') renderChat();
-            if(name === 'social') renderSocial();
-            if(name === 'wallpapers') renderWallpapers();
-
-            window.scrollTo({ top:0, behavior:'smooth' });
-        }
-
-        // ============================================================
-        //  AURA SELECTION
-        // ============================================================
-        function toggleAura(key) {
-            const idx = state.selectedAuras.indexOf(key);
-            if(idx > -1) state.selectedAuras.splice(idx, 1);
-            else if(state.selectedAuras.length < 3) state.selectedAuras.push(key);
-            saveState();
-            renderAuraGrid();
-        }
-        function renderAuraGrid() {
-            const grid = document.getElementById('auraGrid');
-            const counter = document.getElementById('counter');
-            if(!grid) return;
-            grid.innerHTML = Object.entries(AURAS).map(([key, aura]) => {
-                const sel = state.selectedAuras.includes(key);
-                return `<div class="aura-btn${sel?' selected':''}" onclick="App.toggleAura('${key}')">
-                    <span class="emoji">${aura.emoji}</span>
-                    <div class="info"><h3>${aura.name}</h3><p>${aura.desc}</p></div>
-                    <span class="check-mark">✓</span></div>`;
-            }).join('');
-            if(counter) counter.textContent = state.selectedAuras.length;
-        }
-        function confirmAuras() {
-            if(state.selectedAuras.length === 0) { toast('Select at least one aura'); return; }
-            saveState();
-            showPage('home');
-        }
-
-        // ============================================================
-        //  HOME / DASHBOARD
-        // ============================================================
-        function toggleTask(i) {
-            const idx = state.completedTasks.indexOf(i);
-            if(idx > -1) state.completedTasks.splice(idx, 1);
-            else state.completedTasks.push(i);
-            const tasks = getTasks();
-            const total = tasks.length;
-            const done = state.completedTasks.filter(x => x < total).length;
-            const today = new Date().toDateString();
-            if(done === total && total > 0) state.streakData[today] = true;
-            else delete state.streakData[today];
-            saveState();
-            renderHome();
-        }
-        function resetDay() {
-            if(!confirm('Reset all tasks for today?')) return;
-            state.completedTasks = [];
-            delete state.streakData[new Date().toDateString()];
-            saveState();
-            renderHome();
-        }
-
-        function renderHome() {
-            if(state.selectedAuras.length === 0) { showPage('select'); return; }
-            const primary = AURAS[state.selectedAuras[0]];
-            const tasks = getTasks();
-            const { pct, done, total } = calcScore();
-            const streak = calcStreak();
-            const circ = 2*Math.PI*52;
-            const offset = circ - (pct/100)*circ;
-
-            document.body.style.background = 'linear-gradient(145deg,'+primary.accent+'20, #f1f5f9)';
-
-            const names = state.selectedAuras.map(k => AURAS[k].emoji+' '+AURAS[k].name).join(' + ');
-            document.getElementById('homeTitle').textContent = names;
-            document.getElementById('homeBadge').textContent = '⚡ '+state.selectedAuras.map(k=>AURAS[k].emoji).join(' ');
-            document.getElementById('score').textContent = pct+'%';
-            document.getElementById('taskProgress').textContent = done+'/'+total+' done';
-            document.getElementById('streakCount').textContent = streak;
-            document.getElementById('tasksDone').textContent = state.completedTasks.length;
-            document.getElementById('diaryCount').textContent = state.diary.length;
-            document.getElementById('msgCount').textContent = state.chatMessages.filter(m=>m.from==='You').length;
-
-            const ring = document.getElementById('scoreRing');
-            ring.style.strokeDashoffset = offset;
-            ring.style.stroke = primary.accent;
-
-            document.getElementById('tasks').innerHTML = tasks.map((task, i) => {
-                const comp = state.completedTasks.includes(i);
-                return `<div class="task-item${comp?' done':''}" onclick="App.toggleTask(${i})">
-                    <div class="check-box">${comp?'✓':''}</div>
-                    <span class="task-text">${task}</span></div>`;
-            }).join('');
-
-            renderCalendar();
-        }
-
-        function renderCalendar() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            const daysInMonth = new Date(year, month+1, 0).getDate();
-            const firstDay = new Date(year, month, 1).getDay();
-
-            document.getElementById('monthLabel').textContent = now.toLocaleDateString('en',{month:'long',year:'numeric'});
-            const cal = document.getElementById('calendar');
-            cal.innerHTML = '';
-            ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
-                const div = document.createElement('div');
-                div.className = 'cal-day weekday';
-                div.textContent = d;
-                cal.appendChild(div);
-            });
-            for(let i=0; i<firstDay; i++) {
-                const div = document.createElement('div');
-                div.className = 'cal-day';
-                div.style.background = 'transparent';
-                cal.appendChild(div);
+            if(d===now.getDate() && month===now.getMonth() && year===now.getFullYear()) {
+                div.classList.add('today');
             }
-            for(let d=1; d<=daysInMonth; d++) {
-                const ds = new Date(year, month, d).toDateString();
-                const div = document.createElement('div');
-                div.className = 'cal-day';
-                div.textContent = d;
-                if(state.streakData[ds]) {
-                    div.classList.add('active');
-                    if(state.selectedAuras.length) div.style.background = AURAS[state.selectedAuras[0]].accent;
-                }
-                if(d===now.getDate() && month===now.getMonth() && year===now.getFullYear()) div.classList.add('today');
-                cal.appendChild(div);
-            }
+            cal.appendChild(div);
         }
+    }
 
-        // ============================================================
-        //  DIARY
-        // ============================================================
-        function saveDiary() {
-            const content = document.getElementById('diaryInput').value.trim();
-            const mood = document.getElementById('diaryMood').value.trim();
-            if(!content) { toast('Write something first'); return; }
-            state.diary.unshift({ date: new Date().toISOString(), content, mood: mood || '—' });
-            saveState();
-            document.getElementById('diaryInput').value = '';
-            document.getElementById('diaryMood').value = '';
-            renderDiary();
-            toast('📝 Entry saved');
+    // ============================================================
+    //  DIARY
+    // ============================================================
+    function saveDiary() {
+        const content = document.getElementById('diaryInput').value.trim();
+        const mood = document.getElementById('diaryMood').value.trim();
+        if(!content) { toast('Write something first'); return; }
+        S.diary.unshift({ date: new Date().toISOString(), content, mood: mood || '—' });
+        save();
+        document.getElementById('diaryInput').value = '';
+        document.getElementById('diaryMood').value = '';
+        renderDiary();
+        toast('📝 Entry saved');
+    }
+
+    function deleteDiary(index) { S.diary.splice(index, 1); save(); renderDiary(); }
+
+    function renderDiary() {
+        const container = document.getElementById('diaryEntries');
+        if(!container) return;
+        const search = (document.getElementById('diarySearch')?.value || '').toLowerCase();
+        let entries = S.diary;
+        if(search) entries = entries.filter(e => e.content.toLowerCase().includes(search));
+        if(entries.length === 0) {
+            container.innerHTML = '<p style="color:#94a3b8;text-align:center;">'+(search?'No matches.':'No entries yet.')+'</p>';
+            return;
         }
-        function deleteDiary(index) { state.diary.splice(index, 1); saveState(); renderDiary(); }
-
-        function renderDiary() {
-            const container = document.getElementById('diaryEntries');
-            if(!container) return;
-            const search = (document.getElementById('diarySearch')?.value || '').toLowerCase();
-            let entries = state.diary;
-            if(search) entries = entries.filter(e => e.content.toLowerCase().includes(search) || e.mood.toLowerCase().includes(search));
-
-            if(entries.length === 0) {
-                container.innerHTML = '<p style="color:#94a3b8;text-align:center;">' + (search ? 'No matching entries.' : 'No entries yet. Start writing!') + '</p>';
-                return;
-            }
-            container.innerHTML = entries.map((entry, i) => {
-                const origIndex = state.diary.indexOf(entry);
-                return `<div class="entry-card">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                        <small style="color:#94a3b8;">${new Date(entry.date).toLocaleDateString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</small>
-                        <span style="font-size:12px;background:rgba(0,0,0,0.04);padding:2px 10px;border-radius:12px;">${entry.mood}</span>
-                    </div>
-                    <p style="font-size:14px;color:#1e293b;line-height:1.5;white-space:pre-wrap;">${entry.content}</p>
-                    <button class="btn-sm btn-danger" onclick="App.deleteDiary(${origIndex})" style="margin-top:8px;">🗑️ Delete</button>
-                </div>`;
-            }).join('');
-        }
-
-        // ============================================================
-        //  ROUTINE NOTES
-        // ============================================================
-        function saveRoutine() {
-            const title = document.getElementById('routineTitle').value.trim();
-            const content = document.getElementById('routineInput').value.trim();
-            if(!title || !content) { toast('Add both title and description'); return; }
-            state.routines.unshift({ id: Date.now(), title, content, date: new Date().toISOString() });
-            saveState();
-            document.getElementById('routineTitle').value = '';
-            document.getElementById('routineInput').value = '';
-            renderRoutines();
-            toast('📋 Routine saved');
-        }
-        function deleteRoutine(id) { state.routines = state.routines.filter(r => r.id !== id); saveState(); renderRoutines(); }
-
-        function renderRoutines() {
-            const container = document.getElementById('routineEntries');
-            if(!container) return;
-            if(state.routines.length === 0) {
-                container.innerHTML = '<p style="color:#94a3b8;text-align:center;">No routines saved yet.</p>';
-                return;
-            }
-            container.innerHTML = state.routines.map(r => `
-                <div class="entry-card">
-                    <div style="display:flex;justify-content:space-between;align-items:start;">
-                        <strong style="color:#0f172a;">${r.title}</strong>
-                        <small style="color:#94a3b8;">${new Date(r.date).toLocaleDateString()}</small>
-                    </div>
-                    <p style="font-size:14px;color:#475569;margin-top:6px;white-space:pre-wrap;">${r.content}</p>
-                    <button class="btn-sm btn-danger" onclick="App.deleteRoutine(${r.id})" style="margin-top:8px;">🗑️ Delete</button>
+        container.innerHTML = entries.map(e => {
+            const idx = S.diary.indexOf(e);
+            return `<div class="entry-card">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <small style="color:#94a3b8;">${new Date(e.date).toLocaleDateString()}</small>
+                    <span style="font-size:11px;background:rgba(0,0,0,0.04);padding:2px 8px;border-radius:10px;">${e.mood}</span>
                 </div>
-            `).join('');
+                <p style="font-size:13px;white-space:pre-wrap;">${e.content}</p>
+                <button class="btn-sm btn-danger" onclick="deleteDiary(${idx})" style="margin-top:6px;">🗑️</button>
+            </div>`;
+        }).join('');
+    }
+
+    // ============================================================
+    //  ROUTINES
+    // ============================================================
+    function saveRoutine() {
+        const title = document.getElementById('routineTitle').value.trim();
+        const content = document.getElementById('routineInput').value.trim();
+        if(!title || !content) { toast('Add title and description'); return; }
+        S.routines.unshift({ id: Date.now(), title, content, date: new Date().toISOString() });
+        save();
+        document.getElementById('routineTitle').value = '';
+        document.getElementById('routineInput').value = '';
+        renderRoutines();
+        toast('📋 Routine saved');
+    }
+
+    function deleteRoutine(id) { S.routines = S.routines.filter(r => r.id !== id); save(); renderRoutines(); }
+
+    function renderRoutines() {
+        const container = document.getElementById('routineEntries');
+        if(!container) return;
+        if(S.routines.length === 0) {
+            container.innerHTML = '<p style="color:#94a3b8;text-align:center;">No routines yet.</p>';
+            return;
         }
+        container.innerHTML = S.routines.map(r => `
+            <div class="entry-card">
+                <strong>${r.title}</strong>
+                <small style="color:#94a3b8;display:block;">${new Date(r.date).toLocaleDateString()}</small>
+                <p style="font-size:13px;margin-top:4px;white-space:pre-wrap;">${r.content}</p>
+                <button class="btn-sm btn-danger" onclick="deleteRoutine(${r.id})" style="margin-top:6px;">🗑️</button>
+            </div>`).join('');
+    }
 
-        // ============================================================
-        //  CHAT (FULLY FUNCTIONAL)
-        // ============================================================
-        function selectChatUser(name) {
-            state.chatUser = name;
-            saveState();
-            renderChat();
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if(!text) return;
-
-            const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-            state.chatMessages.push({ from:'You', to:state.chatUser, text, time:now });
-            saveState();
-            input.value = '';
-            renderChat();
-
-            // Auto-reply after delay
-            const replies = [
-                "That's awesome! 🎉", "I totally agree! 💯", "Keep up the great work! 🌟",
-                "You're doing amazing! 💪", "Let's level up together! 🚀", "Great point! ✨",
-                "Love that energy! 💖", "So true! 🙌", "Thanks for sharing! 📝",
-                "You're an inspiration! 🔥", "Couldn't agree more! 💎", "That's brilliant! 🧠"
-            ];
-            setTimeout(() => {
-                state.chatMessages.push({
-                    from: state.chatUser,
-                    to: 'You',
-                    text: replies[Math.floor(Math.random()*replies.length)],
-                    time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
-                });
-                saveState();
-                renderChat();
-            }, 800 + Math.random() * 1200);
-        }
-
-        function deleteChatMessage(index) {
-            state.chatMessages.splice(index, 1);
-            saveState();
-            renderChat();
-        }
-
-        function renderChat() {
-            const partnerEl = document.getElementById('chatPartner');
-            if(partnerEl) partnerEl.textContent = state.chatUser;
-
-            const usersContainer = document.getElementById('onlineUsers');
-            if(usersContainer) {
-                usersContainer.innerHTML = ONLINE_USERS.map(u => {
-                    const active = state.chatUser === u.name;
-                    return `<div class="user-chip${active?' active':''}" onclick="App.selectChatUser('${u.name}')">
-                        <span class="dot"></span>
-                        <span style="font-size:20px;">${u.avatar}</span>
-                        <div style="flex:1;"><strong>${u.name}</strong><br><small style="color:#94a3b8;">${u.bio}</small></div>
-                        ${active ? '<span style="color:#0f172a;font-size:12px;">✓ Active</span>' : ''}
-                    </div>`;
-                }).join('');
+    // ============================================================
+    //  CHAT — MULTI-DEVICE
+    // ============================================================
+    function startChatPolling() {
+        stopChatPolling();
+        chatPollInterval = setInterval(() => {
+            const newMessages = loadChatMessages();
+            if(JSON.stringify(newMessages) !== JSON.stringify(chatMessages)) {
+                chatMessages = newMessages;
+                renderChatMessages();
             }
+            const onlineCount = updateOnlineStatus();
+            document.getElementById('onlineCount').textContent = onlineCount;
+        }, 1000);
+    }
 
-            const msgs = state.chatMessages.filter(m =>
-                (m.from==='You' && m.to===state.chatUser) ||
-                (m.to==='You' && m.from===state.chatUser)
-            );
-
-            const container = document.getElementById('chatMessages');
-            if(container) {
-                container.innerHTML = msgs.length === 0
-                    ? '<p style="color:#94a3b8;text-align:center;padding:20px;">💬 No messages yet.<br>Say hello to ' + state.chatUser + '!</p>'
-                    : msgs.map((m, i) => {
-                        const isMe = m.from === 'You';
-                        const globalIndex = state.chatMessages.indexOf(m);
-                        return `<div style="display:flex;justify-content:${isMe?'flex-end':'flex-start'};margin:4px 0;">
-                            <div style="max-width:80%;">
-                                <div class="chat-bubble ${isMe?'chat-sent':'chat-received'}">
-                                    <small style="opacity:0.6;">${m.from} · ${m.time}</small>
-                                    <p style="margin:4px 0 0;">${m.text}</p>
-                                </div>
-                                ${isMe ? `<button class="btn-sm btn-danger" onclick="App.deleteChatMessage(${globalIndex})" style="font-size:10px;padding:2px 8px;margin-top:2px;">🗑️</button>` : ''}
-                            </div>
-                        </div>`;
-                    }).join('');
-                container.scrollTop = container.scrollHeight;
-            }
+    function stopChatPolling() {
+        if(chatPollInterval) {
+            clearInterval(chatPollInterval);
+            chatPollInterval = null;
         }
+    }
 
-        // ============================================================
-        //  SOCIAL FEED
-        // ============================================================
-        function createPost() {
-            const input = document.getElementById('postInput');
-            const text = input.value.trim();
-            if(!text) { toast('Write something to post'); return; }
-            const auraName = state.selectedAuras.length > 0
-                ? state.selectedAuras.map(k => AURAS[k].emoji).join(' ')
-                : '⚡';
-            state.socialPosts.unshift({
-                id: Date.now(),
-                author: 'You',
-                avatar: auraName || '😊',
-                text,
-                time: new Date().toISOString(),
-                likes: 0,
-                liked: false
-            });
-            saveState();
-            input.value = '';
-            renderSocial();
-            toast('📝 Post shared!');
+    function sendMessage() {
+        if(!S.username) {
+            document.getElementById('usernameModal').style.display = 'flex';
+            return;
         }
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if(!text) return;
 
-        function likePost(id) {
-            const post = state.socialPosts.find(p => p.id === id);
-            if(!post) return;
-            if(state.likedPosts.includes(id)) {
-                state.likedPosts = state.likedPosts.filter(x => x !== id);
-                post.likes = Math.max(0, post.likes - 1);
-            } else {
-                state.likedPosts.push(id);
-                post.likes++;
-            }
-            saveState();
-            renderSocial();
-        }
-
-        function deletePost(id) {
-            state.socialPosts = state.socialPosts.filter(p => p.id !== id);
-            state.likedPosts = state.likedPosts.filter(x => x !== id);
-            saveState();
-            renderSocial();
-        }
-
-        function renderSocial() {
-            const container = document.getElementById('socialFeed');
-            if(!container) return;
-
-            if(state.socialPosts.length === 0) {
-                container.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:20px;">🌐 No posts yet.<br>Share your aura progress with the community!</p>';
-                return;
-            }
-
-            container.innerHTML = state.socialPosts.map(post => {
-                const isLiked = state.likedPosts.includes(post.id);
-                const isMine = post.author === 'You';
-                return `<div class="post-card">
-                    <div class="post-header">
-                        <div class="post-avatar">${post.avatar}</div>
-                        <div>
-                            <strong>${post.author}</strong>
-                            <small style="color:#94a3b8;display:block;">${new Date(post.time).toLocaleDateString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</small>
-                        </div>
-                    </div>
-                    <p style="font-size:14px;color:#1e293b;line-height:1.5;">${post.text}</p>
-                    <div class="post-actions">
-                        <span class="post-action${isLiked?' liked':''}" onclick="App.likePost(${post.id})">
-                            ${isLiked?'❤️':'🤍'} ${post.likes}
-                        </span>
-                        <span class="post-action">💬 Comment</span>
-                        ${isMine ? `<span class="post-action btn-danger" onclick="App.deletePost(${post.id})">🗑️</span>` : ''}
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        // ============================================================
-        //  WALLPAPERS
-        // ============================================================
-        function setWallpaper(url) { state.wallpaper = url; saveState(); setBackground(url); renderWallpapers(); toast('✅ Wallpaper applied'); }
-        function randomWallpaper() { setWallpaper(UNSPLASH[Math.floor(Math.random()*UNSPLASH.length)]); }
-
-        function renderWallpapers() {
-            const countEl = document.getElementById('wpCount');
-            if(countEl) countEl.textContent = UNSPLASH.length+'+ wallpapers from Unsplash';
-            const grid = document.getElementById('wpGrid');
-            if(!grid) return;
-            grid.innerHTML = UNSPLASH.map(url => {
-                const sel = state.wallpaper === url;
-                return `<div class="wp-thumb${sel?' selected':''}" style="background-image:url('${url}')" onclick="App.setWallpaper('${url}')"></div>`;
-            }).join('');
-        }
-
-        // ============================================================
-        //  INIT
-        // ============================================================
-        function init() {
-            setBackground(state.wallpaper);
-
-            document.querySelectorAll('.nav-item').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    if(page) showPage(page);
-                });
-            });
-
-            // Start on landing — NO SAMPLE DATA
-            showPage('landing');
-        }
-
-        window.App = {
-            showPage, toggleAura, confirmAuras,
-            toggleTask, resetDay,
-            saveDiary, deleteDiary,
-            saveRoutine, deleteRoutine,
-            selectChatUser, sendMessage, deleteChatMessage,
-            createPost, likePost, deletePost,
-            setWallpaper, randomWallpaper,
-            renderHome, renderDiary, renderRoutines, renderChat, renderSocial, renderWallpapers
+        const msg = {
+            id: Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            username: S.username,
+            text: text,
+            time: new Date().toISOString()
         };
 
-        init();
-        console.log('⚡ Aura Builder · id³ — All sections functional');
-    })();
+        chatMessages.push(msg);
+        // Keep only last 200 messages
+        if(chatMessages.length > 200) chatMessages = chatMessages.slice(-200);
+        saveChatMessages(chatMessages);
+        updateOnlineStatus();
+        input.value = '';
+        renderChatMessages();
+    }
+
+    function deleteChatMessage(id) {
+        chatMessages = chatMessages.filter(m => m.id !== id);
+        saveChatMessages(chatMessages);
+        renderChatMessages();
+    }
+
+    function renderChat() {
+        document.getElementById('myUsername').textContent = S.username || '—';
+        const onlineCount = updateOnlineStatus();
+        document.getElementById('onlineCount').textContent = onlineCount;
+        renderChatMessages();
+    }
+
+    function renderChatMessages() {
+        const container = document.getElementById('chatMessages');
+        if(!container) return;
+
+        if(chatMessages.length === 0) {
+            container.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:20px;">No messages yet. Say hello!</p>';
+            return;
+        }
+
+        container.innerHTML = chatMessages.map(m => {
+            const isMe = m.username === S.username;
+            const time = new Date(m.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            return `<div style="display:flex;justify-content:${isMe?'flex-end':'flex-start'};margin:4px 0;">
+                <div style="max-width:80%;">
+                    <div class="chat-bubble ${isMe?'chat-sent':'chat-received'}">
+                        <div class="chat-username" style="color:${isMe?'rgba(255,255,255,0.7)':'#0f172a'};">${m.username} · ${time}</div>
+                        <p style="margin:2px 0 0;">${m.text}</p>
+                    </div>
+                    ${isMe ? `<button class="btn-sm btn-danger" onclick="deleteChatMessage('${m.id}')" style="font-size:10px;padding:2px 6px;margin-top:2px;">🗑️</button>` : ''}
+                </div>
+            </div>`;
+        }).join('');
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // ============================================================
+    //  SOCIAL
+    // ============================================================
+    function createPost() {
+        const text = document.getElementById('postInput').value.trim();
+        if(!text) { toast('Write something'); return; }
+        const avatar = S.selectedAuras.length>0 ? S.selectedAuras.map(k=>AURAS[k].emoji).join('') : '😊';
+        S.socialPosts.unshift({ id:Date.now(), author:S.username||'You', avatar, text, time:new Date().toISOString(), likes:0 });
+        save(); document.getElementById('postInput').value = ''; renderSocial(); toast('📝 Posted!');
+    }
+
+    function likePost(id) {
+        const post = S.socialPosts.find(p=>p.id===id);
+        if(!post) return;
+        if(S.likedPosts.includes(id)) { S.likedPosts=S.likedPosts.filter(x=>x!==id); post.likes=Math.max(0,post.likes-1); }
+        else { S.likedPosts.push(id); post.likes++; }
+        save(); renderSocial();
+    }
+
+    function deletePost(id) { S.socialPosts=S.socialPosts.filter(p=>p.id!==id); S.likedPosts=S.likedPosts.filter(x=>x!==id); save(); renderSocial(); }
+
+    function renderSocial() {
+        const container = document.getElementById('socialFeed');
+        if(!container) return;
+        if(S.socialPosts.length===0) {
+            container.innerHTML='<p style="color:#94a3b8;text-align:center;padding:20px;">No posts yet.</p>';
+            return;
+        }
+        container.innerHTML = S.socialPosts.map(post => {
+            const isLiked = S.likedPosts.includes(post.id);
+            return `<div class="post-card">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                    <div class="post-avatar">${post.avatar}</div>
+                    <div><strong>${post.author}</strong><br><small style="color:#94a3b8;">${new Date(post.time).toLocaleDateString()}</small></div>
+                </div>
+                <p style="font-size:13px;">${post.text}</p>
+                <div class="post-actions">
+                    <span class="post-action${isLiked?' liked':''}" onclick="likePost(${post.id})">${isLiked?'❤️':'🤍'} ${post.likes}</span>
+                    ${post.author===S.username?`<span class="post-action" onclick="deletePost(${post.id})" style="color:#ef4444;">🗑️</span>`:''}
+                </div></div>`;
+        }).join('');
+    }
+
+    // ============================================================
+    //  WALLPAPERS
+    // ============================================================
+    function setWallpaper(url) { S.wallpaper = url; save(); setBg(url); renderWallpapers(); toast('✅ Applied'); }
+    function randomWallpaper() { setWallpaper(UNSPLASH[Math.floor(Math.random()*UNSPLASH.length)]); }
+    function renderWallpapers() {
+        document.getElementById('wpCount').textContent = UNSPLASH.length+'+ wallpapers';
+        document.getElementById('wpGrid').innerHTML = UNSPLASH.map(url => {
+            const sel = S.wallpaper === url;
+            return `<div class="wp-thumb${sel?' selected':''}" style="background-image:url('${url}')" onclick="setWallpaper('${url}')"></div>`;
+        }).join('');
+    }
+
+    // ============================================================
+    //  INIT
+    // ============================================================
+    function init() {
+        setBg(S.wallpaper);
+        
+        // Show username modal if no username set
+        if(!S.username) {
+            document.getElementById('usernameModal').style.display = 'flex';
+        } else {
+            document.getElementById('usernameModal').style.display = 'none';
+            document.getElementById('myUsername').textContent = S.username;
+            updateOnlineStatus();
+        }
+
+        // Start on landing
+        navigate('landing');
+
+        // Periodic online status update
+        setInterval(() => {
+            if(S.username) updateOnlineStatus();
+        }, 5000);
+
+        console.log('⚡ Aura Builder · id³ — Multi-device chat ready');
+    }
+
+    // Make all functions global
+    window.navigate = navigate;
+    window.toggleAura = toggleAura;
+    window.confirmSelection = confirmSelection;
+    window.toggleTask = toggleTask;
+    window.resetDay = resetDay;
+    window.saveDiary = saveDiary;
+    window.deleteDiary = deleteDiary;
+    window.saveRoutine = saveRoutine;
+    window.deleteRoutine = deleteRoutine;
+    window.sendMessage = sendMessage;
+    window.deleteChatMessage = deleteChatMessage;
+    window.setUsername = setUsername;
+    window.changeUsername = changeUsername;
+    window.createPost = createPost;
+    window.likePost = likePost;
+    window.deletePost = deletePost;
+    window.setWallpaper = setWallpaper;
+    window.randomWallpaper = randomWallpaper;
+
+    init();
     </script>
 </body>
 </html>
