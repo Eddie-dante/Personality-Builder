@@ -1,14 +1,29 @@
-# app.py - AuraRise Complete Application
+# app.py - AuraRise Complete Application (Python 3.14 Compatible)
 import streamlit as st
 import random
 import datetime
 import time
-from PIL import Image, ImageDraw
-import base64
-from io import BytesIO
+import json
+import os
+import sys
 import hashlib
-import requests
-from urllib.request import urlopen
+from io import BytesIO
+import base64
+
+# Handle Pillow import gracefully
+try:
+    from PIL import Image, ImageDraw, ImageFont
+    PILLOW_AVAILABLE = True
+except ImportError:
+    PILLOW_AVAILABLE = False
+    st.warning("Pillow not available - some image features disabled")
+
+# Handle requests import
+try:
+    import requests
+    REQUESTS_AVAILABLE = True
+except ImportError:
+    REQUESTS_AVAILABLE = False
 
 # Page configuration
 st.set_page_config(
@@ -316,7 +331,7 @@ if 'app_data' not in st.session_state:
         'current_chat_user': 'Edwin'
     }
 
-# Aura definitions with rich descriptions
+# Aura definitions
 AURAS = [
     {'id': 'focus', 'name': 'Focus', 'icon': '🎯', 'color': '#ff6b6b', 'desc': 'Laser-sharp concentration for deep work'},
     {'id': 'creativity', 'name': 'Creativity', 'icon': '🎨', 'color': '#f06595', 'desc': 'Unleash imagination and innovation'},
@@ -328,23 +343,22 @@ AURAS = [
     {'id': 'mindfulness', 'name': 'Mindfulness', 'icon': '🧘‍♀️', 'color': '#63e6be', 'desc': 'Live in the present moment'},
 ]
 
-# Wallpaper collection based on aura moods
+# Wallpapers (using gradient colors instead of external images for reliability)
 WALLPAPERS = {
-    'default': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
-    'focus': 'https://images.unsplash.com/photo-1518655048521-f130df041f66?w=1920&q=80',
-    'creativity': 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1920&q=80',
-    'vitality': 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=1920&q=80',
-    'courage': 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80',
-    'mindfulness': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80',
-    'discipline': 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=1920&q=80',
-    'balance': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80',
-    'adventure': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80',
-    'empathy': 'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=1920&q=80',
-    'resilience': 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=80',
-    'leadership': 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=80',
+    'default': 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%)',
+    'focus': 'linear-gradient(135deg, #1a0a0a 0%, #3e1a1a 50%, #1a0a0a 100%)',
+    'creativity': 'linear-gradient(135deg, #0a1a0a 0%, #1a3e1a 50%, #0a1a0a 100%)',
+    'vitality': 'linear-gradient(135deg, #1a1a0a 0%, #3e3e1a 50%, #1a1a0a 100%)',
+    'courage': 'linear-gradient(135deg, #1a0a0a 0%, #3e1a1a 50%, #1a0a0a 100%)',
+    'mindfulness': 'linear-gradient(135deg, #0a1a1a 0%, #1a3e3e 50%, #0a1a1a 100%)',
+    'discipline': 'linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%)',
+    'balance': 'linear-gradient(135deg, #1a0a1a 0%, #3e1a3e 50%, #1a0a1a 100%)',
+    'adventure': 'linear-gradient(135deg, #1a1a0a 0%, #3e3e1a 50%, #1a1a0a 100%)',
+    'empathy': 'linear-gradient(135deg, #0a1a1a 0%, #1a3e3e 50%, #0a1a1a 100%)',
+    'resilience': 'linear-gradient(135deg, #1a1a1a 0%, #3e3e3e 50%, #1a1a1a 100%)',
+    'leadership': 'linear-gradient(135deg, #1a0a0a 0%, #3e1a1a 50%, #1a0a0a 100%)',
 }
 
-# Helper functions
 def get_wallpaper():
     """Get current wallpaper based on user selection"""
     wp = st.session_state.app_data['user'].get('wallpaper', 'default')
@@ -362,25 +376,13 @@ def set_background():
     if not aura_colors:
         aura_colors = ['rgba(0,198,255,0.3)', 'rgba(168,85,247,0.3)']
     
-    color_overlay = ', '.join(aura_colors)
-    
     st.markdown(f"""
     <style>
         .stApp {{
-            background: linear-gradient(135deg, {color_overlay}), url('{wallpaper}');
+            background: {wallpaper};
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-        }}
-        .stApp::before {{
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: -1;
         }}
     </style>
     """, unsafe_allow_html=True)
@@ -505,14 +507,12 @@ def generate_daily_quests():
         })
     data['daily_quest_date'] = today
 
-# Maze generation with improved algorithm
 def generate_maze(size=11):
     """Generate a solvable maze using recursive backtracking"""
     if size % 2 == 0:
         size += 1
     grid = [[1 for _ in range(size)] for _ in range(size)]
     
-    # Create path
     def carve(r, c):
         grid[r][c] = 0
         dirs = [(0, 2), (2, 0), (0, -2), (-2, 0)]
@@ -524,11 +524,8 @@ def generate_maze(size=11):
                 carve(nr, nc)
     
     carve(1, 1)
-    
-    # Place goal
     grid[size-2][size-2] = 2
     
-    # Ensure path to goal
     if grid[size-3][size-2] == 1 and grid[size-2][size-3] == 1:
         grid[size-3][size-2] = 0
     if grid[size-2][size-3] == 1:
@@ -536,7 +533,6 @@ def generate_maze(size=11):
     
     return grid
 
-# Initialize maze
 if 'maze' not in st.session_state:
     st.session_state.maze = generate_maze(11)
     st.session_state.player_pos = [1, 1]
@@ -581,7 +577,6 @@ def move_player(direction):
     elif direction == 'right' and c < len(maze[0])-1 and maze[r][c+1] != 1:
         st.session_state.player_pos = [r, c+1]
     
-    # Check win condition
     if maze[st.session_state.player_pos[0]][st.session_state.player_pos[1]] == 2:
         st.session_state.app_data['total_mazes'] += 1
         coins_earned = random.randint(20, 50)
@@ -602,7 +597,6 @@ def show_home():
     
     data = st.session_state.app_data
     
-    # Aura selection if none selected
     if not data['selected_auras']:
         st.markdown("### 🌟 Select Your Auras to Begin")
         st.markdown("*Choose the energies you want to cultivate*")
@@ -634,11 +628,9 @@ def show_home():
                 st.rerun()
         return
     
-    # Dashboard view
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        # Aura Score
         score = calc_aura_score()
         tier = '🌟 Legend' if score >= 250 else '✨ Master' if score >= 100 else '🔮 Adept' if score >= 50 else '🌱 Novice'
         
@@ -652,7 +644,6 @@ def show_home():
         </div>
         """, unsafe_allow_html=True)
         
-        # XP Progress
         xp_pct = min(data['user']['xp'] / data['user']['xp_to_next'] * 100, 100)
         st.markdown(f"""
         <div style="margin: 20px 0;">
@@ -667,7 +658,6 @@ def show_home():
         </div>
         """, unsafe_allow_html=True)
         
-        # Aura stats
         st.markdown("### 📊 Aura Progress")
         for aura_id in data['selected_auras']:
             aura = next((a for a in AURAS if a['id'] == aura_id), None)
@@ -687,7 +677,6 @@ def show_home():
                 """, unsafe_allow_html=True)
     
     with col2:
-        # Stats cards
         st.markdown("### 📈 Stats")
         
         st.markdown(f"""
@@ -715,7 +704,6 @@ def show_home():
         </div>
         """, unsafe_allow_html=True)
     
-    # Quick actions
     st.markdown("### ⚡ Quick Actions")
     c1, c2, c3, c4 = st.columns(4)
     with c1:
@@ -742,7 +730,6 @@ def show_quests():
     data = st.session_state.app_data
     generate_daily_quests()
     
-    # Tabs for different quest types
     tab1, tab2, tab3 = st.tabs(["📅 Daily Quests", "📋 Active Quests", "✅ Completed"])
     
     with tab1:
@@ -770,7 +757,6 @@ def show_quests():
     with tab2:
         st.markdown("### Active Quests")
         
-        # Add quest form
         with st.expander("➕ Create New Quest", expanded=False):
             col1, col2 = st.columns(2)
             with col1:
@@ -792,7 +778,6 @@ def show_quests():
                 st.success("Quest created successfully!")
                 st.rerun()
         
-        # Active quests list
         active_quests = [q for q in data['quests'] if not q['completed']]
         if active_quests:
             for quest in active_quests:
@@ -833,7 +818,6 @@ def show_journal():
     
     data = st.session_state.app_data
     
-    # Journal entry form
     with st.expander("✍️ Write New Entry", expanded=True):
         col1, col2 = st.columns(2)
         with col1:
@@ -859,14 +843,12 @@ def show_journal():
                 st.success("📝 Journal entry saved! +15 XP")
                 st.rerun()
     
-    # Journal entries display
     st.markdown("### 📚 Your Entries")
     
     if data['journal']:
-        # Search and filter
         search = st.text_input("🔍 Search entries", placeholder="Search by keyword...")
         
-        entries = data['journal'][::-1]  # Most recent first
+        entries = data['journal'][::-1]
         if search:
             entries = [e for e in entries if search.lower() in e.get('content', '').lower() or search.lower() in e.get('title', '').lower()]
         
@@ -899,7 +881,6 @@ def show_achievements():
     
     st.markdown(f"### Progress: {unlocked_count}/{total_count} Unlocked")
     
-    # Progress bar for achievements
     progress_pct = (unlocked_count / total_count * 100) if total_count > 0 else 0
     st.markdown(f"""
     <div class="progress-bar" style="margin: 20px 0;">
@@ -928,7 +909,6 @@ def show_maze():
     
     data = st.session_state.app_data
     
-    # Maze controls and info
     col1, col2 = st.columns([3, 1])
     with col1:
         st.markdown(f"**Mazes completed: {data['total_mazes']}** | Use arrow keys or buttons to move")
@@ -940,7 +920,6 @@ def show_maze():
             st.session_state.player_pos = [1, 1]
             st.rerun()
     
-    # Direction controls
     st.markdown("### 🕹️ Controls")
     col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
     
@@ -978,11 +957,9 @@ def show_maze():
     with col5:
         st.write("")
     
-    # Render maze
     st.markdown("### 🗺️ Maze Map")
     st.markdown(render_maze_html(st.session_state.maze, st.session_state.player_pos), unsafe_allow_html=True)
     
-    # Keyboard controls info
     st.markdown("""
     <div style="text-align: center; color: #888; margin-top: 20px;">
         <small>💡 Tip: Use arrow keys on your keyboard for faster navigation!</small>
@@ -1009,8 +986,7 @@ def show_chat():
                         border-radius: 15px; 
                         margin: 5px 0;
                         cursor: pointer;
-                        border: {'2px solid #00c6ff' if is_selected else '1px solid rgba(255,255,255,0.1)'};"
-                 onclick="this.querySelector('button').click()">
+                        border: {'2px solid #00c6ff' if is_selected else '1px solid rgba(255,255,255,0.1)'};">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div>
                         <span class="online-dot"></span>
@@ -1034,7 +1010,6 @@ def show_chat():
             
             st.markdown(f"### 💬 Chatting with {current_user['avatar']} {data['current_chat_user']}")
             
-            # Chat messages
             chat_container = st.container(height=400)
             with chat_container:
                 chat_messages = [m for m in data['chat_messages'] 
@@ -1054,7 +1029,6 @@ def show_chat():
                     </div>
                     """, unsafe_allow_html=True)
             
-            # Message input
             with st.form(f"chat_form_{data['current_chat_user']}", clear_on_submit=True):
                 col1, col2 = st.columns([4, 1])
                 with col1:
@@ -1063,7 +1037,6 @@ def show_chat():
                     send = st.form_submit_button("📤 Send", use_container_width=True)
                 
                 if send and message:
-                    # Add user message
                     data['chat_messages'].append({
                         'from': 'You',
                         'to': data['current_chat_user'],
@@ -1071,7 +1044,6 @@ def show_chat():
                         'time': datetime.datetime.now().strftime("%H:%M")
                     })
                     
-                    # Simulate auto-response
                     responses = [
                         "That's awesome! Keep it up! 🎉",
                         "I totally agree with you! 💯",
@@ -1158,7 +1130,6 @@ def show_wallpaper_selector():
     data = st.session_state.app_data
     current_wp = data['user'].get('wallpaper', 'default')
     
-    # Group wallpapers by category
     categories = {
         '🎯 Focus & Discipline': ['focus', 'discipline'],
         '🎨 Creativity & Expression': ['creativity', 'adventure'],
@@ -1173,18 +1144,24 @@ def show_wallpaper_selector():
         cols = st.columns(4)
         for i, wp_name in enumerate(wp_list):
             with cols[i % 4]:
-                wp_url = WALLPAPERS.get(wp_name, WALLPAPERS['default'])
                 is_selected = current_wp == wp_name
                 
                 st.markdown(f"""
-                <div style="position: relative; margin: 10px 0;">
-                    <img src="{wp_url}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 15px; 
-                         border: {'3px solid #00c6ff' if is_selected else '1px solid rgba(255,255,255,0.2)'};">
-                    <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); 
-                              padding: 5px 10px; border-radius: 10px; font-size: 0.8rem;">
+                <div style="background: {WALLPAPERS[wp_name]}; 
+                          height: 120px; 
+                          border-radius: 15px;
+                          margin: 10px 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          border: {'3px solid #00c6ff' if is_selected else '1px solid rgba(255,255,255,0.2)'};">
+                    <div style="background: rgba(0,0,0,0.7); 
+                              padding: 10px 15px; 
+                              border-radius: 10px;
+                              color: white;">
                         {wp_name.capitalize()}
+                        {' ✅' if is_selected else ''}
                     </div>
-                    {'✅ Selected' if is_selected else ''}
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -1193,21 +1170,15 @@ def show_wallpaper_selector():
                     st.success(f"🎨 Wallpaper set to {wp_name}!")
                     st.rerun()
 
-# Main app
 def main():
     """Main application"""
-    # Apply dynamic background
     set_background()
-    
-    # Add watermark
     add_watermark()
     
-    # Check and generate daily quests
     if st.session_state.app_data['selected_auras']:
         generate_daily_quests()
         check_achievements()
     
-    # Sidebar
     with st.sidebar:
         st.markdown("""
         <div style="text-align: center; padding: 20px 0;">
@@ -1221,7 +1192,6 @@ def main():
         
         data = st.session_state.app_data
         
-        # User info
         if data['selected_auras']:
             st.markdown(f"""
             <div style="text-align: center; margin-bottom: 20px;">
@@ -1233,7 +1203,6 @@ def main():
         
         st.divider()
         
-        # Navigation
         st.markdown("### 🧭 Navigation")
         
         nav_options = {
@@ -1252,7 +1221,6 @@ def main():
         
         st.divider()
         
-        # Online users preview
         st.markdown("### 🟢 Online")
         for user in data['online_users'][:5]:
             st.markdown(f"""
@@ -1262,7 +1230,6 @@ def main():
             </div>
             """, unsafe_allow_html=True)
     
-    # Route to selected page
     if current_page == "Home":
         show_home()
     elif current_page == "Quests":
